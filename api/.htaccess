@@ -1,0 +1,3 @@
+RewriteEngine On
+
+RewriteRule ([a-z]+)$ index.php [NC, L]

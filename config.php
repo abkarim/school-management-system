@@ -50,7 +50,13 @@ define('DATABASE_CHARSET', 'utf8'); // TODO remove value
  * Database table prefix
  ** Prepend to table name
  */
-define('TABLE_PREFIX', ''); // <<TABLE_PREFIX>> 
+define('TABLE_PREFIX', '');
+
+# Maximum image file size in MB
+define('MAX_IMAGE_UPLOAD_SIZE', '10');
+
+# Optimize image
+define('OPTIMIZE_IMAGE', false);
 
 # Handle installation
 define('APP_INSTALLED', false);
