@@ -1,6 +1,6 @@
 <?php
 /**
- *! Please Don't edit this file if you don't know what are you doing
+ *! Please Don't edit this file if you don't know what you are doing
  *
  ** This file contains all the settings and DataBase configuration
  *
@@ -44,7 +44,7 @@ define('DATABASE_PASSWORD', 'root');
  * Database charset
  * require to create table in database
  */
-define('DATABASE_CHARSET', 'utf8'); // TODO remove value
+define('DATABASE_CHARSET', 'utf8');
 
 /**
  * Database table prefix
@@ -56,7 +56,7 @@ define('TABLE_PREFIX', '');
 define('MAX_IMAGE_UPLOAD_SIZE', '10');
 
 # Optimize image
-define('OPTIMIZE_IMAGE', false);
+define('CLONE_IMAGE_IN_DIFFERENCE_SIZE', false);
 
 # Handle installation
 define('APP_INSTALLED', false);

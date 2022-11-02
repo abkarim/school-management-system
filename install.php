@@ -15,7 +15,7 @@ try {
 }
 
 # Include query class
-require_once __DIR__ . '/core/inc/Query.php';
+require_once __DIR__ . '/inc/Query.php';
 $query = new Query($writeDB);
 
 /**
@@ -45,6 +45,9 @@ try {
         ->create_table_request()
         ->create_table_book()
         ->create_table_book_transaction();
+
+    // Close connection
+    $writeDB = null;
 
 } catch (PDOException $e) {
     echo $e->getMessage();

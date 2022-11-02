@@ -11,7 +11,7 @@ require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/CustomException.php';
 
 class Media extends CustomException {
-    private $_valid_image = ['jpg', 'jpeg', 'png', 'gif'];
+    private $_valid_image = ['jpeg', 'gif', 'png'];
 
     /**
      * Initiate file
@@ -24,13 +24,15 @@ class Media extends CustomException {
     /**
      * Handle image
      * validate and move to location
-     * @return filename
+     * @param string prefix
+     * @return array image info
      */
-    public function handle_image() {
-        # Get file path info
-        $pathInfo = pathinfo($this->_file['name']);
+    public function handle_image(?string $prefix): array{
+        # Get file info
+        $imageInfo = [];
+        $info      = getimagesize($this->_file['tmp_name']);
 
-        if (!in_array($pathInfo['extension'], $this->_valid_image)) {
+        if (!in_array(str_replace('image/', '', $info['mime']), $this->_valid_image)) {
             throw new CustomException("invalid image! accepted format are " . join(', ', $this->_valid_image));
         }
 
@@ -38,14 +40,31 @@ class Media extends CustomException {
             throw new CustomException("file size is too large! maximum image upload size is " . MAX_IMAGE_UPLOAD_SIZE . "MB");
         }
 
-        $name = md5(time() + rand()) . '.' . $pathInfo['extension'];
-        $path = __DIR__ . '/../public/image/' . $name;
+        $name = $prefix . md5(time() + rand()) . '.jpg';
+        $path = __DIR__ . '/../public/image/';
 
-        #move file
-        if (!move_uploaded_file($this->_file['tmp_name'], $path)) {
-            throw new CustomException("file moving failed! please try again");
+        # Move image
+        $imageFN = "imagecreatefrom" . str_replace('image/', '', $info['mime']);
+        $image   = call_user_func($imageFN($this->_file['tmp_name']));
+
+        if (!imagejpeg($image, $path . $name, 90)) {
+            throw new CustomException('"image uploading failed", please try again later!');
         }
-        return $name;
+
+        $imageInfo['name'] = $name;
+
+        # Clone image
+        if (CLONE_IMAGE_IN_DIFFERENCE_SIZE === true) {
+            # Get size
+            $width  = $info[0];
+            $height = $info[1];
+
+            #copy and make medium
+
+            #copy and make small
+        }
+
+        return $imageInfo;
     }
 
 }

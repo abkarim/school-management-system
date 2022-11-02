@@ -1,7 +1,7 @@
 <?php
 
 # Import configuration file to get database configuration
-require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../config.php';
 
 class DB {
     // Static read and write connection
@@ -13,7 +13,10 @@ class DB {
     private static $_DBpassword = DATABASE_PASSWORD;
     private static $_DBcharset  = DATABASE_CHARSET;
 
-    // Handle readonly actions
+    /**
+     * Handle read only action
+     * @return PDO connection
+     */
     public static function connect_read_DB() {
         // Create new connection if already not connected
         if (self::$_readDBConnection === null) {
@@ -28,7 +31,10 @@ class DB {
         return self::$_readDBConnection;
     }
 
-    // Handle only write actions
+    /**
+     * Handle write only action
+     * @return PDO connection
+     */
     public static function connect_write_DB() {
         // Create new connection if already not connected
         if (self::$_writeDBConnection === null) {
