@@ -96,5 +96,13 @@ class Response {
 
         // Send response
         echo json_encode($this->_responseArray);
+        // Cose connection
+        if (isset($readDB)) {
+            unset($readDB);
+        }
+        if (isset($writeDB)) {
+            unset($writeDB);
+        }
+        exit;
     }
 }

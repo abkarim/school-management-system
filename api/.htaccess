@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# Redirect all request to index.php file
+RewriteRule ^(.+)$ index.php

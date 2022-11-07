@@ -4,7 +4,7 @@ require_once __DIR__ . '/inc/DB.php';
 
 /**
  * Get connection
- *readDB for reading operation
+ * readDB for reading operation
  * writeDB for writing operation
  */
 try {
@@ -16,7 +16,7 @@ try {
 
 # Include query class
 require_once __DIR__ . '/inc/Query.php';
-$query = new Query($writeDB);
+$query = new Query(null, $writeDB);
 
 /**
  * Create table
