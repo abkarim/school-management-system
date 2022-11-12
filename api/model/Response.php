@@ -4,105 +4,104 @@
  */
 
 class Response {
-    // Define properties
     private $_success;
     private $_toCache;
     private $_httpStatusCode;
     private $_messages = [];
     private $_data;
     private $_responseArray = [];
+    private $_cache_second  = 30;
 
     /**
      * Set success
-     * @param Boolean is success
-     * @return ResponseClass for method chaining;
+     * @param bool is success
+     * @return Response for method chaining
      */
-    public function setSuccess($success) {
+    public function setSuccess($success): Response {
         $this->_success = $success;
         return $this;
     }
 
     /**
      * Set cache
-     * @param Boolean enable cache
-     * @return ResponseClass for method chaining;
+     * @param bool enable cache
+     * @return Response for method chaining
      */
-    public function setCache($cache) {
+    public function setCache(bool $cache): Response {
         $this->_toCache = $cache;
         return $this;
     }
 
     /**
-     * Set status code
-     * @param Number status code
-     * @return ResponseClass for method chaining;
+     * Set cache time
+     * @param int cache time in seconds
+     * @return Response for method chaining
      */
-    public function setStatusCode($statusCode) {
+    public function setCacheTime(int $time): Response {
+        $this->_cache_second = $time;
+        return $this;
+    }
+
+    /**
+     * Set status code
+     * @param int status code
+     * @return Response for method chaining
+     */
+    public function setStatusCode(int $statusCode): Response {
         $this->_httpStatusCode = $statusCode;
         return $this;
     }
 
     /**
      * Add message
-     * @param String message
-     * @return ResponseClass for method chaining;
+     * @param array message
+     * @return Response for method chaining
      */
-    public function addMessage($message) {
-        $this->_messages[] = $message;
+    public function setMessage(array $message): Response {
+        $this->_messages = $message;
         return $this;
     }
 
     /**
      * Set data
-     * @param Array data array
-     * @return ResponseClass for method chaining;
+     * @param array data array
+     * @return Response for method chaining
      */
-    public function setData($data) {
+    public function setData(array $data): Response {
         $this->_data = $data;
         return $this;
     }
 
     /**
      * Send response
-     * @return void SendResponse
      */
-    public function send() {
-        // Set header
+    public function send(): void {
         header("Content-Type: application/json");
 
-        // Cache control
         if ($this->_toCache) {
-            header("Cache-Control: max-age=30"); # Cache response for 30 seconds
+            header("Cache-Control: max-age=" . $this->_cache_second);
         } else {
-            header("Cache-Control: no-cache, no-store"); # No cache
+            header("Cache-Control: no-cache, no-store");
         }
 
         // Handle server error
         if (!is_numeric($this->_httpStatusCode) || !is_bool($this->_success)) {
-            // This is a server error # Prepare data for server error
+            $this->setMessage(["something went wrong, please try again"]);
             http_response_code(500);
             $this->_responseArray['success']    = false;
             $this->_responseArray['statusCode'] = 500;
-            $this->addMessage("Something went wrong, please try again");
-            $this->_responseArray['message'] = $this->_messages;
+            $this->_responseArray['message']    = $this->_messages;
         } else {
-            // Prepare data
             http_response_code($this->_httpStatusCode);
             $this->_responseArray['success']    = $this->_success;
             $this->_responseArray['statusCode'] = $this->_httpStatusCode;
             $this->_responseArray['message']    = $this->_messages;
-            $this->_responseArray['data']       = $this->_data;
+            if ($this->_success) {
+                $this->_responseArray['data']   = $this->_data;
+                $this->_responseArray['length'] = count($this->_data);
+            }
         }
 
-        // Send response
         echo json_encode($this->_responseArray);
-        // Cose connection
-        if (isset($readDB)) {
-            unset($readDB);
-        }
-        if (isset($writeDB)) {
-            unset($writeDB);
-        }
-        exit;
     }
 }

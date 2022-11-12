@@ -17,7 +17,7 @@ class DB {
      * Handle read only action
      * @return PDO connection
      */
-    public static function connect_read_DB() {
+    public static function connect_read_DB(): PDO {
         // Create new connection if already not connected
         if (self::$_readDBConnection === null) {
             self::$_readDBConnection = new PDO(
@@ -35,7 +35,7 @@ class DB {
      * Handle write only action
      * @return PDO connection
      */
-    public static function connect_write_DB() {
+    public static function connect_write_DB(): PDO {
         // Create new connection if already not connected
         if (self::$_writeDBConnection === null) {
             self::$_writeDBConnection = new PDO(

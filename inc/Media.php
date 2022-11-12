@@ -27,7 +27,7 @@ class Media extends CustomException {
      * @param string prefix
      * @return array image info
      */
-    public function handle_image(?string $prefix): array{
+    public function handle_image(string $prefix=''): array{
         # Get file info
         $imageInfo = [];
         $info      = getimagesize($this->_file['tmp_name']);
@@ -45,7 +45,7 @@ class Media extends CustomException {
 
         # Move image
         $imageFN = "imagecreatefrom" . str_replace('image/', '', $info['mime']);
-        $image   = call_user_func($imageFN($this->_file['tmp_name']));
+        $image   = call_user_func($imageFN, $this->_file['tmp_name']);
 
         if (!imagejpeg($image, $path . $name, 90)) {
             throw new CustomException('"image uploading failed", please try again later!');

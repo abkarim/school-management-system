@@ -6,18 +6,18 @@
 # Include config file
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/CustomException.php';
+require_once __DIR__ . '/DB.php';
 
 class Query extends CustomException {
-    private $_write_connection = null;
+    private $_connection = null;
     private $_table_prefix     = TABLE_PREFIX;
 
     /**
      * Setup connection
      * @param Connection database connection
      */
-    public function __construct(PDO $read_db = null, PDO $write_db = null) {
-        $this->_read_connection  = $read_db;
-        $this->_write_connection = $write_db;
+    public function __construct(PDO $db) {
+        $this->_connection = $db;
     }
 
 ################################ Create table start ###################################
@@ -37,7 +37,7 @@ class Query extends CustomException {
                 created_by VARCHAR(500) NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -58,7 +58,7 @@ class Query extends CustomException {
             created_by VARCHAR(500) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -78,7 +78,7 @@ class Query extends CustomException {
             ip_address VARCHAR(200) NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -97,7 +97,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -132,7 +132,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -152,7 +152,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -181,7 +181,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -208,7 +208,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -235,7 +235,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -255,7 +255,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -275,7 +275,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -293,7 +293,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -311,7 +311,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -329,7 +329,7 @@ class Query extends CustomException {
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -348,7 +348,7 @@ class Query extends CustomException {
             comment VARCHAR(500) NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -368,7 +368,7 @@ class Query extends CustomException {
             comment VARCHAR(500) NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -387,7 +387,7 @@ class Query extends CustomException {
             comment VARCHAR(500) NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -404,7 +404,7 @@ class Query extends CustomException {
             common INT(1) NOT NULL DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -424,7 +424,7 @@ class Query extends CustomException {
             added_by VARCHAR(500) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -444,7 +444,7 @@ class Query extends CustomException {
             added_by VARCHAR(500) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -464,7 +464,7 @@ class Query extends CustomException {
             added_by VARCHAR(500) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -484,7 +484,7 @@ class Query extends CustomException {
             added_by VARCHAR(500) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
-        $this->_write_connection->exec($sql);
+        $this->_connection->exec($sql);
         return $this;
     }
 
@@ -495,7 +495,7 @@ class Query extends CustomException {
      * @param string table name
      * @param array [column name => value]
      */
-    public function insert(string $table_name, array $data): bool {
+    public static function insert(string $table_name, array $data): bool {
         $sql     = "INSERT INTO $table_name ";
         $columns = "";
         $values  = "";
@@ -517,7 +517,7 @@ class Query extends CustomException {
         $sql .= "( $columns ) VALUES ( $values )";
 
         # Execute query
-        return $this->_write_connection->exec($sql);
+        return DB::connect_write_DB()->exec($sql);
     }
 
     /**
@@ -527,7 +527,7 @@ class Query extends CustomException {
      * @param array [column => value] where to update
      * @param int how many
      */
-    public function update(string $table_name, array $data, array $where, int $limit = 0): int {
+    public static function update(string $table_name, array $data, array $where, int $limit = 0): int {
         $sql = "UPDATE $table_name SET ";
         # Handle column and value to update
         foreach ($data as $column => $value) {
@@ -542,7 +542,7 @@ class Query extends CustomException {
             $sql .= "LIMIT $limit";
         }
 
-        $stmt = $this->_write_connection->prepare($sql);
+        $stmt = DB::connect_write_DB()->prepare($sql);
         $stmt->exec();
         return $stmt->rowCount();
     }
@@ -553,7 +553,7 @@ class Query extends CustomException {
      * @param array [column => value] where to delete
      * @param bool is deleted
      */
-    public function delete(string $table_name, array $where, int $limit = 0): bool {
+    public static function delete(string $table_name, array $where, int $limit = 0): bool {
         $sql = "DELETE FROM $table_name WHERE ";
         # Handle column and data where to update
         foreach ($where as $column => $value) {
@@ -562,7 +562,7 @@ class Query extends CustomException {
         if ($limit !== 0) {
             $sql .= "LIMIT $limit";
         }
-        $stmt = $this->_write_connection->prepare($sql);
+        $stmt = DB::connect_write_DB()->prepare($sql);
         $stmt->exec();
         return $stmt->rowCount() !== 0;
     }
@@ -575,7 +575,7 @@ class Query extends CustomException {
      * @param int limit
      * @return array data
      */
-    public function get_all(string $table_name, array $column_name = [], bool $asc = true, int $limit = 0): array{
+    public static function get_all(string $table_name, array $column_name = [], bool $asc = true, int $limit = 0): array{
         $sql = "SELECT ";
         /**
          * Handle column
@@ -592,7 +592,7 @@ class Query extends CustomException {
         } else {
             $sql .= "*";
         }
-        $sql .= " FROM $table_name ORDER BY ";
+        $sql .= " FROM $table_name ORDER BY id ";
 
         # Handle order
         if ($asc) {
@@ -603,7 +603,7 @@ class Query extends CustomException {
         if ($limit !== 0) {
             $sql .= "LIMIT $limit";
         }
-        $stmt = $this->_read_connection->prepare($sql);
+        $stmt = DB::connect_read_DB()->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -617,7 +617,7 @@ class Query extends CustomException {
      * @param int limit
      * @return array data
      */
-    public function get_specific(string $table_name, array $column_name = [], array $where, bool $asc = true, int $limit = 0): array{
+    public static function get_specific(string $table_name, array $column_name = [], array $where, bool $asc = true, int $limit = 0): array{
         $sql = "SELECT ";
 
         /**
@@ -645,7 +645,7 @@ class Query extends CustomException {
         }
 
         # Handle order
-        $sql .= "ORDER BY ";
+        $sql .= "ORDER BY id";
         if ($asc) {
             $sql .= "ASC";
         } else {
@@ -654,7 +654,7 @@ class Query extends CustomException {
         if ($limit !== 0) {
             $sql = " LIMIT $limit";
         }
-        $stmt = $this->_read_connection->prepare($sql);
+        $stmt = DB::connect_read_DB()->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
     }

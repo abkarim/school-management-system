@@ -16,7 +16,7 @@ try {
 
 # Include query class
 require_once __DIR__ . '/inc/Query.php';
-$query = new Query(null, $writeDB);
+$query = new Query($writeDB);
 
 /**
  * Create table
