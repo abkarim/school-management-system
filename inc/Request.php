@@ -32,7 +32,7 @@ class Request {
      * @param string parameter
      * @return Request
      */
-    public function get(string $class, string $method, $parameter = ''): Request {
+    public function get(string $class, string $method, string $parameter = ''): Request {
         if ($this->_request['REQUEST_METHOD'] === 'GET') {
             call_user_func(array($class, $method), $parameter);
         }

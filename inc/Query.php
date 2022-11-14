@@ -9,8 +9,8 @@ require_once __DIR__ . '/CustomException.php';
 require_once __DIR__ . '/DB.php';
 
 class Query extends CustomException {
-    private $_connection = null;
-    private $_table_prefix     = TABLE_PREFIX;
+    private $_connection   = null;
+    private $_table_prefix = TABLE_PREFIX;
 
     /**
      * Setup connection
@@ -49,11 +49,9 @@ class Query extends CustomException {
         $sql = "CREATE TABLE " . $this->_table_prefix . "user (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             user_id VARCHAR(500) NOT NULL,
-            name VARCHAR(500) NOT NULL,
             type VARCHAR(500) NOT NULL,
-            username VARCHAR(500) UNIQUE NOT NULL,
+            email VARCHAR(500) UNIQUE NOT NULL,
             password VARCHAR(500) NOT NULL,
-            image VARCHAR(500) NULL,
             school_id VARCHAR(500) NOT NULL,
             created_by VARCHAR(500) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -401,7 +399,6 @@ class Query extends CustomException {
             name VARCHAR(500) UNIQUE NOT NULL,
             school_id VARCHAR(500) NOT NULL,
             user_id VARCHAR(500) NOT NULL,
-            common INT(1) NOT NULL DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
         $this->_connection->exec($sql);
@@ -495,8 +492,8 @@ class Query extends CustomException {
      * @param string table name
      * @param array [column name => value]
      */
-    public static function insert(string $table_name, array $data): bool {
-        $sql     = "INSERT INTO $table_name ";
+    public static function insert(string $table_name, array $data): void {
+        $sql     = "INSERT INTO " . TABLE_PREFIX . $table_name . " ";
         $columns = "";
         $values  = "";
         $index   = 0;
@@ -505,10 +502,10 @@ class Query extends CustomException {
         foreach ($data as $column => $value) {
             if ($index > 0) {
                 $columns .= ", $column";
-                $values .= ", $value";
+                $values .= ", '$value'";
             } else {
                 $columns .= $column;
-                $values .= $value;
+                $values .= "'$value'";
             }
 
             $index++;
@@ -517,7 +514,7 @@ class Query extends CustomException {
         $sql .= "( $columns ) VALUES ( $values )";
 
         # Execute query
-        return DB::connect_write_DB()->exec($sql);
+        DB::connect_write_DB()->exec($sql);
     }
 
     /**
@@ -528,15 +525,15 @@ class Query extends CustomException {
      * @param int how many
      */
     public static function update(string $table_name, array $data, array $where, int $limit = 0): int {
-        $sql = "UPDATE $table_name SET ";
+        $sql = "UPDATE " . TABLE_PREFIX . $table_name . " SET ";
         # Handle column and value to update
         foreach ($data as $column => $value) {
-            $sql .= "$column = $value ";
+            $sql .= "$column = '$value' ";
         }
         $sql .= "WHERE ";
         # Handle column and data where to update
         foreach ($where as $column => $value) {
-            $sql .= "$column = $value ";
+            $sql .= "$column = '$value' "; // TODO handle not equal to
         }
         if ($limit !== 0) {
             $sql .= "LIMIT $limit";
@@ -554,16 +551,16 @@ class Query extends CustomException {
      * @param bool is deleted
      */
     public static function delete(string $table_name, array $where, int $limit = 0): bool {
-        $sql = "DELETE FROM $table_name WHERE ";
+        $sql = "DELETE FROM " . TABLE_PREFIX . $table_name . " WHERE ";
         # Handle column and data where to update
         foreach ($where as $column => $value) {
-            $sql .= "$column = $value ";
+            $sql .= "$column = '$value' ";
         }
         if ($limit !== 0) {
             $sql .= "LIMIT $limit";
         }
         $stmt = DB::connect_write_DB()->prepare($sql);
-        $stmt->exec();
+        $stmt->execute();
         return $stmt->rowCount() !== 0;
     }
 
@@ -584,15 +581,15 @@ class Query extends CustomException {
         if (count($column_name) !== 0) {
             foreach ($column_name as $key => $column) {
                 if ($key === 0) {
-                    $sql .= "$column";
+                    $sql .= "'$column'";
                 } else {
-                    $sql .= ", $column";
+                    $sql .= ", '$column'";
                 }
             }
         } else {
             $sql .= "*";
         }
-        $sql .= " FROM $table_name ORDER BY id ";
+        $sql .= " FROM " . TABLE_PREFIX . $table_name . " ORDER BY id ";
 
         # Handle order
         if ($asc) {
@@ -605,11 +602,11 @@ class Query extends CustomException {
         }
         $stmt = DB::connect_read_DB()->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Get specific row
+     * Get specific columns 
      * @param string table name
      * @param array column name empty for all
      * @param array where to select
@@ -627,25 +624,25 @@ class Query extends CustomException {
         if (count($column_name) !== 0) {
             foreach ($column_name as $key => $column) {
                 if ($key === 0) {
-                    $sql .= "$column";
+                    $sql .= "'$column'";
                 } else {
-                    $sql .= ", $column";
+                    $sql .= ", '$column'";
                 }
             }
         } else {
             $sql .= "*";
         }
-        $sql .= " FROM $table_name WHERE ";
+        $sql .= " FROM " . TABLE_PREFIX . $table_name . " WHERE ";
 
         /**
          * Handle where to select
          */
         foreach ($where as $column => $value) {
-            $sql .= "$column = $value ";
+            $sql .= "$column = '$value' "; // TODO handle not equal to
         }
 
         # Handle order
-        $sql .= "ORDER BY id";
+        $sql .= "ORDER BY id ";
         if ($asc) {
             $sql .= "ASC";
         } else {
@@ -656,7 +653,7 @@ class Query extends CustomException {
         }
         $stmt = DB::connect_read_DB()->prepare($sql);
         $stmt->execute();
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 }

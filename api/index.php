@@ -25,7 +25,8 @@ $request->options();
 /**
  * Get last part of an url to handle specific task
  */
-preg_match('/[a-z0-9]+$/i', $url, $specific_part);
+preg_match('/[A-z0-9.]+$/i', $url, $matches);
+$specific_part = $matches[0];
 
 $response = new Response();
 
@@ -66,7 +67,7 @@ function handle_content_type_json(): void {
  * return error if not set
  */
 function handle_content_type_multipart(): void {
-    if (!isset($_SERVER['CONTENT_TYPE']) || !preg_match( "/multipart\/form-data; ?boundary=.+/i", $_SERVER['CONTENT_TYPE'] )) {
+    if (!isset($_SERVER['CONTENT_TYPE']) || !preg_match("/multipart\/form-data; ?boundary=.+/i", $_SERVER['CONTENT_TYPE'])) {
         send_response(false, 400, ["content type must be multipart/form-data;boundary=something"]);
     }
 }
@@ -89,7 +90,7 @@ function get_json_data() {
  */
 function match_url(string $path): bool {
     global $url;
-    return preg_match("/$path\/[a-z0-9]+$/i", $url);
+    return preg_match("/$path\/[A-z0-9.]+$/i", $url);
 }
 
 /**
@@ -100,34 +101,61 @@ if (strlen(substr($url, 5)) === 0) {
     send_response(false, 404, ['endpoint not found']);
 }
 
-/**
- * Handle request endpoint
- */
-switch (substr($url, 5)) {
-/**
- * Handle all image action
- */
-case 'image':
-    $request
-        ->get("Image", "return_images")
-        ->post("Image", "upload");
-    send_response(false, 405, ['method not allowed']);
-    break;
+try {
+    /**
+     * Handle request endpoint
+     */
+    switch (substr($url, 5)) {
+    /**
+         * Signup endpoint
+         */
+    case 'signup':
 
-/**
- * Handle specific image action
- */
-case match_url('image'):
-    $request
-        ->get()
-        ->post()
-        ->delete();
-    send_response(false, 405, ['method not allowed']);
-    break;
+        break;
 
-/**
- * Handle unmatched endpoint
- */
-default:
-    send_response(false, 404, ['endpoint not found']);
+    /**
+         * Login endpoint
+         */
+    case 'login':
+        $request
+            ->post('User', 'login');
+        send_response(false, 405, ['method not allowed']);
+        break;
+
+    /**
+         * Handle all image action
+         */
+    case 'image':
+        $request
+            ->get("Image", "return_all")
+            ->post("Image", "upload");
+        send_response(false, 405, ['method not allowed']);
+        break;
+
+    /**
+         * Handle specific image action
+         */
+    case match_url('image'):
+        $request
+            ->get("Image", "return", $specific_part) // TODO remove if not found any use case
+            ->delete("Image", "delete", $specific_part);
+        send_response(false, 405, ['method not allowed']);
+        break;
+
+    /**
+         * Handle unmatched endpoint
+         */
+    default:
+        send_response(false, 404, ['endpoint not found']);
+    }
+
+} catch (CustomException $e) {
+    send_response(false, 400, [$e->getMessage()]);
+
+} catch (PDOException $e) {
+    if (SHOW_PDO_ERROR === true) {
+        send_response(false, 500, [$e->getMessage()]);
+    } else {
+        send_response(false, 500, ['something went wrong, please try again later!']);
+    }
 }

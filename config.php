@@ -48,15 +48,18 @@ define('DATABASE_CHARSET', 'utf8');
 
 /**
  * Database table prefix
- ** Prepend to table name
+ * Prepend to table name
  */
 define('TABLE_PREFIX', '');
 
 # Maximum image file size in MB
-define('MAX_IMAGE_UPLOAD_SIZE', '10');
-
-# Optimize image
-define('CLONE_IMAGE_IN_DIFFERENCE_SIZE', false);
+define('MAX_IMAGE_UPLOAD_SIZE', 10);
 
 # Handle installation
 define('APP_INSTALLED', false);
+
+/**
+ * Show pdo error mode - bool
+ * turn off on production app
+ */
+define('SHOW_PDO_ERROR', true); // Todo set false
