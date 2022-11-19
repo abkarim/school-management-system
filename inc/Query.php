@@ -29,7 +29,7 @@ class Query extends CustomException {
     public function create_table_school(): Query {
         $sql = "CREATE TABLE " . $this->_table_prefix . "school (
                 id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                school_id VARCHAR(500) NOT NULL,
+                school_id VARCHAR(500) NOT NULL UNIQUE,
                 name VARCHAR(500) NOT NULL,
                 location VARCHAR(500) NOT NULL,
                 image VARCHAR(500) NULL,
@@ -48,8 +48,8 @@ class Query extends CustomException {
     public function create_table_user(): Query {
         $sql = "CREATE TABLE " . $this->_table_prefix . "user (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            user_id VARCHAR(500) NOT NULL,
-            type VARCHAR(500) NOT NULL,
+            user_id VARCHAR(500) NOT NULL UNIQUE,
+            role VARCHAR(500) NOT NULL,
             email VARCHAR(500) UNIQUE NOT NULL,
             password VARCHAR(500) NOT NULL,
             school_id VARCHAR(500) NOT NULL,
@@ -68,9 +68,10 @@ class Query extends CustomException {
         $sql = "CREATE TABLE " . $this->_table_prefix . "session (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             user_id VARCHAR(500) NOT NULL,
-            access_token VARCHAR(200) NOT NULL,
+            role VARCHAR(500) NOT NULL,
+            access_token VARCHAR(200) NOT NULL UNIQUE,
             access_token_expiry DATETIME NOT NULL,
-            refresh_token VARCHAR(200) NOT NULL,
+            refresh_token VARCHAR(200) NOT NULL UNIQUE,
             refresh_token_expiry DATETIME NOT NULL,
             school_id VARCHAR(500) NOT NULL,
             ip_address VARCHAR(200) NULL,
@@ -105,8 +106,8 @@ class Query extends CustomException {
      */
     public function create_table_student(): Query {
         $sql = "CREATE TABLE " . $this->_table_prefix . "student (
-            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            student_id VARCHAR(500) NULL,
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            user_id VARCHAR(500) NOT NULL UNIQUE,
             name VARCHAR(500) NOT NULL,
             student_group VARCHAR(500) NULL,
             section VARCHAR(500) NULL,
@@ -127,6 +128,7 @@ class Query extends CustomException {
             mother_image VARCHAR(500) NULL,
             fee_amount VARCHAR(500) NULL,
             school_id VARCHAR(500) NOT NULL,
+            additional_data MEDIUMTEXT NULL,
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
@@ -606,7 +608,7 @@ class Query extends CustomException {
     }
 
     /**
-     * Get specific columns 
+     * Get specific columns
      * @param string table name
      * @param array column name empty for all
      * @param array where to select

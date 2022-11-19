@@ -93,4 +93,13 @@ class Request {
         return $this;
     }
 
+    /**
+     * Handle authentication
+     * @param string user role
+     */
+    public function auth(string $role): Request {
+        User::verify_session_token();
+        return $this;
+    }
+
 }

@@ -84,11 +84,11 @@ function get_json_data() {
 }
 
 /**
- * Match url
+ * Match url and return specific part
  * @param string path regex
  * @return bool is matched
  */
-function match_url(string $path): bool {
+function match_url_and_return_specific(string $path): bool {
     global $url;
     return preg_match("/$path\/[A-z0-9.]+$/i", $url);
 }
@@ -104,15 +104,9 @@ if (strlen(substr($url, 5)) === 0) {
 try {
     /**
      * Handle request endpoint
+     * remove /api/ from user and initiate with switch
      */
     switch (substr($url, 5)) {
-    /**
-         * Signup endpoint
-         */
-    case 'signup':
-
-        break;
-
     /**
          * Login endpoint
          */
@@ -120,6 +114,49 @@ try {
         $request
             ->post('User', 'login');
         send_response(false, 405, ['method not allowed']);
+        break;
+
+    /**
+         * User endpoint
+         */
+    case preg_match('/user\/.+/i'):
+
+        # Remove user/
+        switch (substr($url, 10)) {
+        /**
+             * Super admin
+             */
+        case $specific_part === 'super-admin':
+
+            break;
+
+        /**
+             * Admin
+             */
+        case $specific_part === 'admin':
+            break;
+
+        /**
+             * Librarian
+             */
+        case $specific_part === 'librarian':
+            break;
+
+        /**
+             * Accountant
+             */
+        case $specific_part === 'accountant':
+            break;
+
+        /**
+             * Student
+             */
+        case $specific_part === 'student':
+            break;
+
+        default:continue;
+        }
+
         break;
 
     /**
@@ -135,7 +172,7 @@ try {
     /**
          * Handle specific image action
          */
-    case match_url('image'):
+    case match_url_and_return_specific('image'):
         $request
             ->get("Image", "return", $specific_part) // TODO remove if not found any use case
             ->delete("Image", "delete", $specific_part);

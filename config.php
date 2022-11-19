@@ -52,6 +52,12 @@ define('DATABASE_CHARSET', 'utf8');
  */
 define('TABLE_PREFIX', '');
 
+/**
+ * Student id initialization
+ * start student id from
+ */
+define('STUDENT_ID_START_FROM', '000000000000001');
+
 # Maximum image file size in MB
 define('MAX_IMAGE_UPLOAD_SIZE', 10);
 
@@ -60,6 +66,6 @@ define('APP_INSTALLED', false);
 
 /**
  * Show pdo error mode - bool
- * turn off on production app
+ * turn off in production
  */
 define('SHOW_PDO_ERROR', true); // Todo set false
