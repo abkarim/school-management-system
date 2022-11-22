@@ -6,5 +6,9 @@ same user - multiple student - cat: parent-user
 Upload percentage visibility
 Element loading pre animation - cat: ux
 
-
+Add validation to every input
 Remove all todo
+
+add a user.png user image in uploads/image -- image is already in use 
+
+when uploading image name check image name exists in database 

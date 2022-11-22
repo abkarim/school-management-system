@@ -12,16 +12,6 @@ class User extends Session {
     private static $_table_name = 'user';
 
     /**
-     * Generate user id
-     */
-    private static function generate_user_id(): int {
-        $numbers   = range(1, 10);
-        $numbers[] = time();
-        shuffle($numbers);
-        return (int) join('', $numbers);
-    }
-
-    /**
      * Signup handler
      */
     public static function create(): void {
@@ -62,54 +52,6 @@ class User extends Session {
             ]
         );
 
-    }
-
-    /**
-     * Login
-     */
-    public static function login(): void {
-        handle_content_type_json();
-        $data = get_json_data();
-
-        # Check required filed
-        if (
-            !isset($data->email) ||
-            !isset($data->password)
-        ) {
-            $messages = [];
-            # Add messages
-            !isset($data->email) ? $messages[]    = "email is required" : false;
-            !isset($data->password) ? $messages[] = "password is required" : false;
-
-            send_response(false, 400, $messages);
-        }
-
-        # Verify user
-        $user = Query::get_specific(
-            self::$_table_name,
-            [],
-            [
-                'email' => filter_var($data->email, FILTER_SANITIZE_EMAIL),
-            ]
-        );
-
-        # Sleep for 1 second
-        sleep(1);
-
-        # Is user exists
-        if (count($user) === 0) {
-            send_response(false, 400, ['email or password is wrong, please try again!']);
-        }
-
-        # Check password
-        if (!password_verify($user->password, PASSWORD_ARGON2I)) {
-            send_response(false, 400, ['email or password is wrong, please try again!']);
-        }
-
-        # Create session
-        $sessionData = self::create_session();
-
-        send_response(true, 200, ['']);
     }
 
 }

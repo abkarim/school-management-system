@@ -16,11 +16,11 @@ class Student {
         $data = get_json_data();
 
         # Check required field
-
         $errorMessages = [];
 
+
         # Return error if error found
-        if (count($errorMessages) === 0) {
+        if (count($errorMessages) !== 0) {
             send_response(false, 400, $errorMessages);
         }
 

@@ -42,18 +42,155 @@ class Query extends CustomException {
     }
 
     /**
-     * Create user table
+     * Create table student
      * @return Query for method chaining
      */
-    public function create_table_user(): Query {
-        $sql = "CREATE TABLE " . $this->_table_prefix . "user (
+    public function create_table_student(): Query {
+        $sql = "CREATE TABLE " . $this->_table_prefix . "student (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             user_id VARCHAR(500) NOT NULL UNIQUE,
-            role VARCHAR(500) NOT NULL,
-            email VARCHAR(500) UNIQUE NOT NULL,
+            name VARCHAR(500) NOT NULL,
+            student_group VARCHAR(500) NULL,
+            section VARCHAR(500) NULL,
+            class VARCHAR(500) NULL,
+            father_name VARCHAR(500) NOT NULL,
+            mother_name VARCHAR(500) NOT NULL,
+            blood_group VARCHAR(50) NULL,
+            birth_date VARCHAR(100) NOT NULL,
+            address VARCHAR(500) NULL,
+            mobile_number VARCHAR(50) NULL,
+            father_mother_number VARCHAR(50) NULL,
+            mother_mobile_number VARCHAR(50) NULL,
+            email VARCHAR(500) NULL UNIQUE,
+            fathers_email VARCHAR(500) NULL,
+            mothers_email VARCHAR(500) NULL,
+            image VARCHAR(500) NOT NULL,
+            fathers_image VARCHAR(500) NULL,
+            mothers_image VARCHAR(500) NULL,
+            fee_amount VARCHAR(500) NULL,
+            school_id VARCHAR(500) NOT NULL,
+            additional_data MEDIUMTEXT NULL,
+            created_by VARCHAR(200) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $this->_connection->exec($sql);
+        return $this;
+    }
+
+    /**
+     * Create table teacher
+     * @return Query for method chaining
+     */
+    public function create_table_teacher(): Query {
+        $sql = "CREATE TABLE " . $this->_table_prefix . "teacher (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            user_id VARCHAR(500) NOT NULL UNIQUE,
+            name VARCHAR(500) NOT NULL,
+            father_name VARCHAR(500) NOT NULL,
+            mother_name VARCHAR(500) NOT NULL,
+            blood_group VARCHAR(50) NULL,
+            birth_date VARCHAR(100) NOT NULL,
+            address VARCHAR(500) NULL,
+            mobile_number VARCHAR(50) NULL,
+            department VARCHAR(500) NULL,
+            designation VARCHAR(500) NULL,
+            email VARCHAR(500) NOT NULL UNIQUE,
+            salary_amount VARCHAR(500) NULL,
+            image VARCHAR(500) NOT NULL,
+            join_date DATETIME NOT NULL,
+            school_id VARCHAR(500) NOT NULL,
+            created_by VARCHAR(200) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $this->_connection->exec($sql);
+        return $this;
+    }
+
+    /**
+     * Create table super admin
+     * @return Query for method chaining
+     */
+    public function create_table_super_admin(): Query {
+        $sql = "CREATE TABLE " . $this->_table_prefix . "super_admin (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            user_id VARCHAR(500) NOT NULL,
+            name VARCHAR(500) NOT NULL,
+            email VARCHAR(500) NOT NULL UNIQUE,
+            image VARCHAR(500) NOT NULL,
+            password VARCHAR(500) NOT NULL,
+            created_by VARCHAR(200) NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $this->_connection->exec($sql);
+        return $this;
+    }
+
+    /**
+     * Create table admin
+     * @return Query for method chaining
+     */
+    public function create_table_admin(): Query {
+        $sql = "CREATE TABLE " . $this->_table_prefix . "admin (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            user_id VARCHAR(500) NOT NULL,
+            name VARCHAR(500) NOT NULL,
+            email VARCHAR(500) NULL,
+            image VARCHAR(500) NOT NULL,
             password VARCHAR(500) NOT NULL,
             school_id VARCHAR(500) NOT NULL,
-            created_by VARCHAR(500) NOT NULL,
+            created_by VARCHAR(200) NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $this->_connection->exec($sql);
+        return $this;
+    }
+
+    /**
+     * Create table accountant
+     * @return Query for method chaining
+     */
+    public function create_table_accountant(): Query {
+        $sql = "CREATE TABLE " . $this->_table_prefix . "accountant (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            accountant_id VARCHAR(500) NULL,
+            name VARCHAR(500) NOT NULL,
+            blood_group VARCHAR(50) NULL,
+            birth_date VARCHAR(100) NOT NULL,
+            address VARCHAR(500) NULL,
+            mobile_number VARCHAR(50) NULL,
+            email VARCHAR(500) NOT NULL UNIQUE,
+            salary_amount VARCHAR(500) NULL,
+            image VARCHAR(500) NOT NULL,
+            join_date DATETIME NOT NULL,
+            school_id VARCHAR(500) NOT NULL,
+            created_by VARCHAR(200) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )";
+        $this->_connection->exec($sql);
+        return $this;
+    }
+
+    /**
+     * Create table librarian
+     * @return Query for method chaining
+     */
+    public function create_table_librarian(): Query {
+        $sql = "CREATE TABLE " . $this->_table_prefix . "librarian (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            librarian_id VARCHAR(500) NULL,
+            name VARCHAR(500) NOT NULL,
+            father_name VARCHAR(500) NOT NULL,
+            mother_name VARCHAR(500) NOT NULL,
+            blood_group VARCHAR(50) NULL,
+            birth_date VARCHAR(100) NOT NULL,
+            address VARCHAR(500) NULL,
+            mobile_number VARCHAR(50) NULL,
+            email VARCHAR(500) NOT NULL UNIQUE,
+            salary_amount VARCHAR(500) NULL,
+            image VARCHAR(500) NOT NULL,
+            join_date DATETIME NOT NULL,
+            school_id VARCHAR(500) NOT NULL,
+            created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
         $this->_connection->exec($sql);
@@ -101,34 +238,18 @@ class Query extends CustomException {
     }
 
     /**
-     * Create table student
+     * Create table event
      * @return Query for method chaining
      */
-    public function create_table_student(): Query {
-        $sql = "CREATE TABLE " . $this->_table_prefix . "student (
-            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            user_id VARCHAR(500) NOT NULL UNIQUE,
+    public function create_table_event(): Query {
+        $sql = "CREATE TABLE " . $this->_table_prefix . "event (
+            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(500) NOT NULL,
-            student_group VARCHAR(500) NULL,
-            section VARCHAR(500) NULL,
-            class VARCHAR(500) NULL,
-            father_name VARCHAR(500) NOT NULL,
-            mother_name VARCHAR(500) NOT NULL,
-            blood_group VARCHAR(50) NULL,
-            birth_date VARCHAR(100) NOT NULL,
-            address VARCHAR(500) NULL,
-            mobile_number VARCHAR(50) NULL,
-            father_mother_number VARCHAR(50) NULL,
-            mother_mobile_number VARCHAR(50) NULL,
-            email VARCHAR(500) NULL,
-            father_email VARCHAR(500) NULL,
-            mother_email VARCHAR(500) NULL,
-            image VARCHAR(500) NOT NULL,
-            father_image VARCHAR(500) NULL,
-            mother_image VARCHAR(500) NULL,
-            fee_amount VARCHAR(500) NULL,
+            type VARCHAR(500) NULL,
+            date DATETIME NULL,
+            duration VARCHAR(500) NULL,
+            comment VARCHAR(500) NULL,
             school_id VARCHAR(500) NOT NULL,
-            additional_data MEDIUMTEXT NULL,
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )";
@@ -147,109 +268,6 @@ class Query extends CustomException {
             type VARCHAR(500) NULL,
             amount VARCHAR(50) NOT NULL,
             paid_by VARCHAR(500) NOT NULL,
-            comment VARCHAR(500) NULL,
-            school_id VARCHAR(500) NOT NULL,
-            created_by VARCHAR(200) NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        $this->_connection->exec($sql);
-        return $this;
-    }
-
-    /**
-     * Create table teacher
-     * @return Query for method chaining
-     */
-    public function create_table_teacher(): Query {
-        $sql = "CREATE TABLE " . $this->_table_prefix . "teacher (
-            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            teacher_id VARCHAR(500) NULL,
-            name VARCHAR(500) NOT NULL,
-            father_name VARCHAR(500) NOT NULL,
-            mother_name VARCHAR(500) NOT NULL,
-            blood_group VARCHAR(50) NULL,
-            birth_date VARCHAR(100) NOT NULL,
-            address VARCHAR(500) NULL,
-            mobile_number VARCHAR(50) NULL,
-            department VARCHAR(500) NULL,
-            designation VARCHAR(500) NULL,
-            email VARCHAR(500) NULL,
-            salary_amount VARCHAR(500) NULL,
-            image VARCHAR(500) NOT NULL,
-            join_date DATETIME NOT NULL,
-            school_id VARCHAR(500) NOT NULL,
-            created_by VARCHAR(200) NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        $this->_connection->exec($sql);
-        return $this;
-    }
-
-    /**
-     * Create table accountant
-     * @return Query for method chaining
-     */
-    public function create_table_accountant(): Query {
-        $sql = "CREATE TABLE " . $this->_table_prefix . "accountant (
-            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            accountant_id VARCHAR(500) NULL,
-            name VARCHAR(500) NOT NULL,
-            father_name VARCHAR(500) NOT NULL,
-            mother_name VARCHAR(500) NOT NULL,
-            blood_group VARCHAR(50) NULL,
-            birth_date VARCHAR(100) NOT NULL,
-            address VARCHAR(500) NULL,
-            mobile_number VARCHAR(50) NULL,
-            email VARCHAR(500) NULL,
-            salary_amount VARCHAR(500) NULL,
-            image VARCHAR(500) NOT NULL,
-            join_date DATETIME NOT NULL,
-            school_id VARCHAR(500) NOT NULL,
-            created_by VARCHAR(200) NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        $this->_connection->exec($sql);
-        return $this;
-    }
-
-    /**
-     * Create table librarian
-     * @return Query for method chaining
-     */
-    public function create_table_librarian(): Query {
-        $sql = "CREATE TABLE " . $this->_table_prefix . "librarian (
-            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            librarian_id VARCHAR(500) NULL,
-            name VARCHAR(500) NOT NULL,
-            father_name VARCHAR(500) NOT NULL,
-            mother_name VARCHAR(500) NOT NULL,
-            blood_group VARCHAR(50) NULL,
-            birth_date VARCHAR(100) NOT NULL,
-            address VARCHAR(500) NULL,
-            mobile_number VARCHAR(50) NULL,
-            email VARCHAR(500) NULL,
-            salary_amount VARCHAR(500) NULL,
-            image VARCHAR(500) NOT NULL,
-            join_date DATETIME NOT NULL,
-            school_id VARCHAR(500) NOT NULL,
-            created_by VARCHAR(200) NOT NULL,
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )";
-        $this->_connection->exec($sql);
-        return $this;
-    }
-
-    /**
-     * Create table event
-     * @return Query for method chaining
-     */
-    public function create_table_event(): Query {
-        $sql = "CREATE TABLE " . $this->_table_prefix . "event (
-            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-            name VARCHAR(500) NOT NULL,
-            type VARCHAR(500) NULL,
-            date DATETIME NULL,
-            duration VARCHAR(500) NULL,
             comment VARCHAR(500) NULL,
             school_id VARCHAR(500) NOT NULL,
             created_by VARCHAR(200) NOT NULL,
@@ -526,7 +544,7 @@ class Query extends CustomException {
      * @param array [column => value] where to update
      * @param int how many
      */
-    public static function update(string $table_name, array $data, array $where, int $limit = 0): int {
+    public static function update(string $table_name, array $data, array $where, int $limit = 0): array{
         $sql = "UPDATE " . TABLE_PREFIX . $table_name . " SET ";
         # Handle column and value to update
         foreach ($data as $column => $value) {
@@ -535,15 +553,23 @@ class Query extends CustomException {
         $sql .= "WHERE ";
         # Handle column and data where to update
         foreach ($where as $column => $value) {
-            $sql .= "$column = '$value' "; // TODO handle not equal to
+            $sql .= "$column = '$value' ";
         }
         if ($limit !== 0) {
             $sql .= "LIMIT $limit";
         }
 
         $stmt = DB::connect_write_DB()->prepare($sql);
-        $stmt->exec();
-        return $stmt->rowCount();
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            // Get updated data and return
+            return self::get_specific(
+                $table_name,
+                [],
+                $where
+            );
+        }
+        return [];
     }
 
     /**
@@ -583,9 +609,9 @@ class Query extends CustomException {
         if (count($column_name) !== 0) {
             foreach ($column_name as $key => $column) {
                 if ($key === 0) {
-                    $sql .= "'$column'";
+                    $sql .= "$column";
                 } else {
-                    $sql .= ", '$column'";
+                    $sql .= ", $column";
                 }
             }
         } else {
@@ -626,9 +652,9 @@ class Query extends CustomException {
         if (count($column_name) !== 0) {
             foreach ($column_name as $key => $column) {
                 if ($key === 0) {
-                    $sql .= "'$column'";
+                    $sql .= "$column";
                 } else {
-                    $sql .= ", '$column'";
+                    $sql .= ", $column";
                 }
             }
         } else {
@@ -651,7 +677,7 @@ class Query extends CustomException {
             $sql .= "DESC";
         }
         if ($limit !== 0) {
-            $sql = " LIMIT $limit";
+            $sql .= " LIMIT $limit";
         }
         $stmt = DB::connect_read_DB()->prepare($sql);
         $stmt->execute();

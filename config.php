@@ -53,6 +53,13 @@ define('DATABASE_CHARSET', 'utf8');
 define('TABLE_PREFIX', '');
 
 /**
+ * Default user image name
+ * when user doesn't uploaded an image this image will be in use
+ * Image should be placed in public/uploads/image/ directory with this name
+ */
+define('DEFAULT_USER_IMAGE_NAME', 'user.png');
+
+/**
  * Student id initialization
  * start student id from
  */

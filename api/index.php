@@ -26,7 +26,7 @@ $request->options();
  * Get last part of an url to handle specific task
  */
 preg_match('/[A-z0-9.]+$/i', $url, $matches);
-$specific_part = $matches[0];
+@$specific_part = $matches[0];
 
 $response = new Response();
 
@@ -84,13 +84,13 @@ function get_json_data() {
 }
 
 /**
- * Match url and return specific part
+ * Match url
  * @param string path regex
  * @return bool is matched
  */
-function match_url_and_return_specific(string $path): bool {
+function match_url(string $path): bool {
     global $url;
-    return preg_match("/$path\/[A-z0-9.]+$/i", $url);
+    return preg_match("/$path\/[A-z0-9.-]+$/i", $url);
 }
 
 /**
@@ -110,51 +110,76 @@ try {
     /**
          * Login endpoint
          */
-    case 'login':
-        $request
-            ->post('User', 'login');
-        send_response(false, 405, ['method not allowed']);
-        break;
+    case preg_match('/login\/.+/i', substr($url, 5)) !== 0:
+
+        # Remove login/
+        switch (substr($url, 11)) {
+        /**
+             * Super admin global
+             */
+        case 'super-admin':
+            $request->post('SuperAdmin', 'login');
+
+            send_response(false, 405, ['method not allowed']);
+            break;
+        }
 
     /**
          * User endpoint
          */
-    case preg_match('/user\/.+/i'):
+    case preg_match('/user\/.+/i', substr($url, 5)) !== 0:
 
         # Remove user/
         switch (substr($url, 10)) {
         /**
-             * Super admin
+             * Super admin global
              */
-        case $specific_part === 'super-admin':
+        case 'super-admin':
+            $request
+                ->get('SuperAdmin', 'get')
+                ->post('SuperAdmin', 'create');
 
+            send_response(false, 405, ['method not allowed']);
+            break;
+
+        /**
+             * Super admin single
+             */
+        case match_url('super-admin'):
+            $request
+                ->get('SuperAdmin', 'get_specific', $specific_part)
+                ->patch('SuperAdmin', 'update', $specific_part)
+                ->delete('SuperAdmin', 'delete', $specific_part);
+
+            send_response(false, 405, ['method not allowed']);
             break;
 
         /**
              * Admin
              */
-        case $specific_part === 'admin':
+        case 'admin':
             break;
 
         /**
              * Librarian
              */
-        case $specific_part === 'librarian':
+        case 'librarian':
             break;
 
         /**
              * Accountant
              */
-        case $specific_part === 'accountant':
+        case 'accountant':
             break;
 
         /**
              * Student
              */
-        case $specific_part === 'student':
+        case 'student':
             break;
 
-        default:continue;
+        default:
+            send_response(false, 404, ['endpoint not found']);
         }
 
         break;
@@ -172,7 +197,7 @@ try {
     /**
          * Handle specific image action
          */
-    case match_url_and_return_specific('image'):
+    case match_url('image'):
         $request
             ->get("Image", "return", $specific_part) // TODO remove if not found any use case
             ->delete("Image", "delete", $specific_part);

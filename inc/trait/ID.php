@@ -30,4 +30,14 @@ trait ID {
         return $user->user_id + 1;
     }
 
+    /**
+     * Generate random unique id
+     * @return int return id
+     */
+    private static function generate_random_id(): int {
+        $numbers   = range(1, 13);
+        shuffle($numbers);
+        return (int) join('', $numbers);
+    }
+
 }

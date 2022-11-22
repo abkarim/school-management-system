@@ -2,9 +2,9 @@
 
 class Session {
     private static $_table_name                 = 'session';
-    private static $_cookie_name                = "asddfd"; // TODO
-    private static $_expire_access_token_after  = 5; // days
-    private static $_expire_refresh_token_after = 30; // days
+    private static $_cookie_name                = "token";
+    private static $_expire_access_token_after  = 3; // days
+    private static $_expire_refresh_token_after = 20; // days
 
     /**
      * Create user session
@@ -77,22 +77,25 @@ class Session {
 
     /**
      * Insert session
-     * @param * user
+     * send cookie
+     * @param array user
      * @param array session data
      */
-    private static function insert_session($user, array $sessionData) {
+    public static function insert_session(array $user, array $sessionData): void {
         Query::insert(
-            'session',
+            self::$_table_name,
             [
-                'user_id'              => $user->id,
-                'school_id'            => $user->school_id,
-                'ip_address'           => $_SERVER['REMOTE_ADDR'],
+                'user_id'              => $user['user_id'],
+                'role'                 => $user['role'],
+                'school_id'            => $user['role'] === 'super_admin' ? '' : $user['school_id'],
+                'ip_address'           => filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ? $_SERVER['REMOTE_ADDR'] : 'invalid ip',
                 'access_token'         => $sessionData['access_token'],
                 'access_token_expiry'  => $sessionData['access_token_expiry'],
                 'refresh_token'        => $sessionData['refresh_token'],
                 'refresh_token_expiry' => $sessionData['refresh_token_expiry'],
             ]
         );
+        self::set_cookie($sessionData);
     }
 
     /**
@@ -100,7 +103,7 @@ class Session {
      */
     private static function update_session(array $sessionData): bool {
         $count = Query::update(
-            'session',
+            self::$_table_name,
             [
                 'access_token'         => $sessionData['access_token'],
                 'access_token_expiry'  => $sessionData['access_token_expiry'],
@@ -111,6 +114,7 @@ class Session {
                 'id' => $id,
             ]
         );
+        self::set_cookie($sessionData);
         return $count === 1;
     }
 
@@ -123,7 +127,9 @@ class Session {
             self::$_cookie_name,
             json_encode($sessionData),
             time() + (86400 * self::$_expire_refresh_token_after), # 86400 = 1 day
-            "/"
+            "/",
+            $_SERVER['SERVER_NAME'],
+            true
         );
     }
 
