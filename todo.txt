@@ -12,3 +12,9 @@ Remove all todo
 add a user.png user image in uploads/image -- image is already in use 
 
 when uploading image name check image name exists in database 
+
+remove sensitive data from header
+
+handle csrf in sensitive action
+
+Add prepare in query 

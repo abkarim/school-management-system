@@ -73,14 +73,25 @@ function handle_content_type_multipart(): void {
 }
 
 /**
- * Get json data
+ * Get json data and decode it
+ * print error if invalid data found
+ * @return stdClass
  */
-function get_json_data() {
+function get_json_data(): stdClass {
     $rawPostData = file_get_contents("php://input");
     if (!$postData = json_decode($rawPostData)) {
-        send_response(false, 400, ["all data bust be valid json"]);
+        send_response(false, 400, ["all data must be valid json"]);
     }
     return $postData;
+}
+
+/**
+ * Sanitize phone number
+ * @param string mobile number
+ * @return string sanitized number
+ */
+function sanitize_phone_number(string $number): string {
+    return preg_replace('/[^0-9+-]/', '', $number);
 }
 
 /**
@@ -109,20 +120,29 @@ try {
     switch (substr($url, 5)) {
     /**
          * Login endpoint
+         * REGEX: match login/* at last part of url
          */
     case preg_match('/login\/.+/i', substr($url, 5)) !== 0:
 
-        # Remove login/
+        # Remove /api/login/ from current path
         switch (substr($url, 11)) {
         /**
-             * Super admin global
+             * Super admin
              */
         case 'super-admin':
             $request->post('SuperAdmin', 'login');
+            send_response(false, 405, ['method not allowed']);
+            break;
 
+        /**
+             * admin
+             */
+        case 'admin':
+            $request->post('Admin', 'login');
             send_response(false, 405, ['method not allowed']);
             break;
         }
+        break;
 
     /**
          * User endpoint
@@ -132,24 +152,26 @@ try {
         # Remove user/
         switch (substr($url, 10)) {
         /**
-             * Super admin global
+             * Super admin
              */
         case 'super-admin':
             $request
-                ->get('SuperAdmin', 'get')
-                ->post('SuperAdmin', 'create');
+                ->post('SuperAdmin', 'create')
+                ->auth('super_admin')
+                ->patch('SuperAdmin', 'update');
 
             send_response(false, 405, ['method not allowed']);
             break;
 
         /**
-             * Super admin single
+             * Admin global access
              */
-        case match_url('super-admin'):
+        case 'admin':
             $request
-                ->get('SuperAdmin', 'get_specific', $specific_part)
-                ->patch('SuperAdmin', 'update', $specific_part)
-                ->delete('SuperAdmin', 'delete', $specific_part);
+                ->auth('super_admin')
+                ->get('Admin', 'get')
+                ->post('Admin', 'create')
+                ->patch('Admin', 'update');
 
             send_response(false, 405, ['method not allowed']);
             break;
@@ -157,7 +179,14 @@ try {
         /**
              * Admin
              */
-        case 'admin':
+        case match_url('admin'):
+            $request
+                ->auth('admin')
+                ->get('Admin', 'get_specific')
+                ->patch('Admin', 'update')
+                ->delete('Admin', 'delete');
+
+            send_response(false, 405, ['method not allowed']);
             break;
 
         /**
@@ -182,6 +211,42 @@ try {
             send_response(false, 404, ['endpoint not found']);
         }
 
+        break;
+
+    /**
+         * config
+         */
+    case 'config':
+        $request
+            ->post('Config', 'configure');
+
+        send_response(false, 405, ['method not allowed']);
+        break;
+
+    /**
+         * School global
+         */
+    case 'school':
+        $request
+            ->auth('super_admin')
+            ->get('School', 'get')
+            ->post('School', 'create')
+            ->patch('School', 'update');
+
+        send_response(false, 405, ['method not allowed']);
+        break;
+
+    /**
+         * School
+         */
+    case match_url('school'):
+        $request
+            ->auth('super_admin')
+            ->get('School', 'get_specific', $specific_part)
+            ->patch('School', 'update', $specific_part)
+            ->delete('School', 'delete', $specific_part);
+
+        send_response(false, 405, ['method not allowed']);
         break;
 
     /**

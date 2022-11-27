@@ -35,9 +35,21 @@ trait ID {
      * @return int return id
      */
     private static function generate_random_id(): int {
-        $numbers   = range(1, 13);
+        $numbers = range(1, 13);
         shuffle($numbers);
         return (int) join('', $numbers);
+    }
+
+    /**
+     * Handle invalid
+     * return error response on invalid id
+     *
+     * @param string id
+     */
+    private static function handle_invalid_id(string $id): void {
+        if (0 === preg_match('/^[0-9]+$/', $id)) {
+            send_response(false, 400, ['invalid id']);
+        }
     }
 
 }

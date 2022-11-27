@@ -98,8 +98,21 @@ class Request {
      * @param string user role
      */
     public function auth(string $role): Request {
-        User::verify_session_token();
+        $data = User::verify_session();
+
+        /**
+         * Match logged in user role with provided role
+         */
+        if ($data['user_role'] !== $role) {
+            send_response(false, 403, ['you don\'t have access to complete this request']);
+        }
+
+        /**
+         * Define user role and user id to access later in code
+         */
+        define('LOGGEDIN_IN_USER_ROLE', $data['user_role']);
+        define('LOGGEDIN_IN_USER_ID', $data['user_id']);
+
         return $this;
     }
-
 }

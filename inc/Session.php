@@ -7,6 +7,15 @@ class Session {
     private static $_expire_refresh_token_after = 20; // days
 
     /**
+     * Checks is a parameter valid base64 encoded or not
+     * @param string base 64 encoded data
+     * @return bool is valid
+     */
+    private static function is_valid_base64(string $data): bool {
+        return preg_match('/^[A-z0-9\/\r\n+]*={0,2}$/', $data) !== 0;
+    }
+
+    /**
      * Create user session
      */
     public static function create_session(): array{
@@ -33,7 +42,7 @@ class Session {
      * Verify session token
      */
     public static function verify_session(): array{
-        define('CURRENT_TIME', );
+        define('CURRENT_TIME', time());
 
         # Get session data from cookie
         if (
@@ -44,34 +53,52 @@ class Session {
         }
 
         /**
+         * Check required filed
+         * access token and refresh token
+         */
+        if (!isset($cookieData->access_token) || !isset($cookieData->refresh_token)) {
+            send_response(false, 401, ['you must be a logged in user to continue']);
+        }
+        
+        /**
+         * Validate access token and refresh token
+         */
+        if( !self::is_valid_base64($cookieData->access_token) || !self::is_valid_base64($cookieData->refresh_token) ) {
+            send_response(false, 401, ['you must be a logged in user to continue']);
+        }
+
+        /**
          * Verify session
          */
         $data = Query::get_specific(
             self::$_table_name,
             [],
             [
-                'access_token'  => $cookieData['access_token'],
-                'refresh_token' => $cookieData['refresh_token'],
+                'access_token'  => $cookieData->access_token,
+                'refresh_token' => $cookieData->refresh_token,
             ]
         );
 
         if (count($data) === 0) {
-            send_response(false, 401, ['you must be a logged in user to continue']);
+            send_response(false, 401, ['token expired or invalid, please login again']);
         }
 
         # Check refresh token expiry
-        if (CURRENT_TIME > $data->refresh_token_expiry) {
-            send_response(false, 401, ['token expired, please login again']);
+        if (CURRENT_TIME > strtotime($data[0]['refresh_token_expiry'])) {
+            send_response(false, 401, ['token expired or invalid, please login again']);
         }
 
         # check access token expiry
-        if (CURRENT_TIME > $data->access_token_expiry) {
+        if (CURRENT_TIME > strtotime($data[0]['access_token_expiry'])) {
             # Regenerate token
 
             # send cookie
         }
 
-        # Return user role
+        return [
+            'user_id'   => $data[0]['user_id'],
+            'user_role' => $data[0]['role'],
+        ];
 
     }
 
@@ -129,7 +156,7 @@ class Session {
             time() + (86400 * self::$_expire_refresh_token_after), # 86400 = 1 day
             "/",
             $_SERVER['SERVER_NAME'],
-            true
+            // true // TODO turn on
         );
     }
 

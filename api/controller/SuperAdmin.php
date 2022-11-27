@@ -3,26 +3,28 @@ require_once __DIR__ . '/../../inc/trait/ID.php';
 require_once __DIR__ . '/../../inc/trait/Login.php';
 require_once __DIR__ . '/../../inc/trait/Password.php';
 
+/**
+ * Handle super admin actions
+ */
 class SuperAdmin {
     private static $_table_name = 'super_admin';
     use ID, Password, Login;
 
     /**
-     * Handle invalid user id
-     * return error response on invalid id
-     *
-     * @param string userID
-     */
-    private static function handle_invalid_user_id(string $userId): void {
-        if (!preg_match('/[0-9]+/', $userId)) {
-            send_response(false, 400, ["'$userId' is invalid user id"]);
-        }
-    }
-
-    /**
-     * Create super user
+     * Create super admin
      */
     public static function create(): void {
+
+        /**
+         * Only one super user is allowed
+         * this method should only work when installing app
+         * after installation complete don't create a new user
+         */
+        if (APP_INSTALLED === true) {
+            send_response(false, 400, ['any action in this route is not allowed']);
+        }
+        // TODO replace condition with user exists
+
         handle_content_type_json();
         $data = get_json_data();
 
@@ -38,102 +40,31 @@ class SuperAdmin {
             send_response(false, 400, $errorMessages);
         }
 
-        /**
-         * Is user exists with this email
-         */
-        $prevUser = Query::get_specific(
-            self::$_table_name,
-            [],
-            [
-                'email' => $data->email,
-            ]
-        );
-
-        if (count($prevUser) !== 0) {
-            send_response(false, 400, ["'$data->email' is already in use, try to login or use another email"]);
-        }
-
         # Create user id
         $user_id = self::generate_random_id();
 
         $dbData = [
-            'name'     => trim($data->name),
-            'email'    => trim($data->email),
+            'name'     => filter_var(trim($data->name), FILTER_SANITIZE_STRING),
+            'email'    => filter_var(trim($data->email), FILTER_SANITIZE_EMAIL),
             'password' => self::encrypt_password(trim($data->password)),
             'user_id'  => $user_id,
             'image'    => isset($data->image) ? $data->image : DEFAULT_USER_IMAGE_NAME,
         ];
 
-        # Add to database
         Query::insert(
             self::$_table_name,
             $dbData
         );
-
-        send_response(true, 201, ['\'super admin\' created successfully'], $dbData);
-    }
-
-    /**
-     * Get single super admin
-     * @param string super admin id
-     */
-    public static function get_specific(string $userId): void {
-        self::handle_invalid_user_id($userId);
-
-        $data = Query::get_specific(
-            self::$_table_name,
-            [
-                'id',
-                'user_id',
-                'name',
-                'email',
-                'image',
-                'created_by',
-                'created_at',
-            ],
-            [
-                'user_id' => $userId,
-            ],
-            true,
-            1
-        );
-        if (count($data) === 0) {
-            send_response(false, 404, ["user - '$userId' not found"]);
-        }
-
-        send_response(true, 200, ["user returned successfully"], $data, true);
-    }
-
-    /**
-     * Get all super admin
-     */
-    public static function get(): void {
-        $data = Query::get_all(
-            self::$_table_name,
-            [
-                'id',
-                'user_id',
-                'name',
-                'email',
-                'image',
-                'created_by',
-                'created_at',
-            ]
-        );
-        send_response(true, 200, ['super admin list returned successfully'], $data, true);
+        unset($dbData['password']);
+        send_response(true, 201, ['super admin created successfully'], $dbData);
     }
 
     /**
      *  Update super user
-     * @param string user id
      */
-    public static function update(string $userId): void {
-        self::handle_invalid_user_id($userId);
-
+    public static function update(): void {
         handle_content_type_json();
         $data = get_json_data();
-
-        // TODO Only owner can modify data
 
         /**
          * Is user exists with this userID
@@ -142,18 +73,18 @@ class SuperAdmin {
             self::$_table_name,
             [],
             [
-                'user_id' => $userId,
+                'user_id' => LOGGEDIN_IN_USER_ID,
             ]
         );
 
         if (count($user) === 0) {
-            send_response(false, 400, ["user - '$userId' not found"]);
+            send_response(false, 400, ['user not found']);
         }
 
         # Check required field
         $errorMessages = [];
-
         $allowedField = [];
+
         /**
          * Check only specific item that we allow to change
          */
@@ -176,49 +107,12 @@ class SuperAdmin {
             self::$_table_name,
             $allowedField,
             [
-                'user_id' => $userId,
+                'user_id' => LOGGEDIN_IN_USER_ID,
             ]
         );
 
-        if (count($dbData) === 0) {
-            send_response(false, 400, ['data updating failed, maybe same data passed']);
-        }
         unset($dbData[0]['password']);
         send_response(true, 200, ['user updated successfully'], $dbData[0], true);
-    }
-
-    /**
-     *  Delete super user
-     * @param string user id
-     */
-    public static function delete(string $userId): void {
-        self::handle_invalid_user_id($userId);
-
-        // TODO Only owner can modify data
-
-        /**
-         * Is user exists with this userID
-         */
-        $user = Query::get_specific(
-            self::$_table_name,
-            [],
-            [
-                'user_id' => $userId,
-            ]
-        );
-
-        if (count($user) === 0) {
-            send_response(false, 400, ["user - '$userId' not found"]);
-        }
-
-        $isDeleted = Query::delete(
-            self::$_table_name,
-            [
-                'user_id' => $userId,
-            ]
-        );
-
-        $isDeleted ? send_response(true, 204, ['user deleted successfully']) : send_response(true, 500, ['something went wrong please try again later!']);
     }
 
 }

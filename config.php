@@ -69,7 +69,7 @@ define('STUDENT_ID_START_FROM', '000000000000001');
 define('MAX_IMAGE_UPLOAD_SIZE', 10);
 
 # Handle installation
-define('APP_INSTALLED', false);
+define('APP_INSTALLED', '0');
 
 /**
  * Show pdo error mode - bool

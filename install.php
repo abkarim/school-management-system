@@ -47,8 +47,10 @@ try {
         ->create_table_book()
         ->create_table_book_transaction();
 
-    // Close connection
+    # Close connection
     $writeDB = null;
+
+    # Set app installed = true
 
 } catch (PDOException $e) {
     echo $e->getMessage();

@@ -31,10 +31,12 @@ class Query extends CustomException {
                 id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 school_id VARCHAR(500) NOT NULL UNIQUE,
                 name VARCHAR(500) NOT NULL,
-                location VARCHAR(500) NOT NULL,
+                address VARCHAR(500) NOT NULL,
                 image VARCHAR(500) NULL,
-                admin_id_list VARCHAR(500) NULL,
-                created_by VARCHAR(500) NOT NULL,
+                email VARCHAR(500) NOT NULL,
+                mobile_number VARCHAR(50) NOT NULL,
+                description VARCHAR(500) NULL,
+                admin_list MEDIUMTEXT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )";
         $this->_connection->exec($sql);
@@ -546,30 +548,38 @@ class Query extends CustomException {
      */
     public static function update(string $table_name, array $data, array $where, int $limit = 0): array{
         $sql = "UPDATE " . TABLE_PREFIX . $table_name . " SET ";
-        # Handle column and value to update
+        /**
+         * Handle column and value to update
+         */
+        $index = 0;
         foreach ($data as $column => $value) {
+            $index !== 0 ? $sql .= ', ' : ' ';
             $sql .= "$column = '$value' ";
+            $index ++;
         }
         $sql .= "WHERE ";
-        # Handle column and data where to update
+        /**
+         * Handle column and data where to update
+         */
+        $index = 0;
         foreach ($where as $column => $value) {
+            $index !== 0 ? $sql .= "AND " : false;
             $sql .= "$column = '$value' ";
+            $index ++;
         }
         if ($limit !== 0) {
             $sql .= "LIMIT $limit";
         }
-
+        echo $sql;
         $stmt = DB::connect_write_DB()->prepare($sql);
         $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            // Get updated data and return
-            return self::get_specific(
-                $table_name,
-                [],
-                $where
-            );
-        }
-        return [];
+
+        // Get updated data and return
+        return self::get_specific(
+            $table_name,
+            [],
+            $where
+        );
     }
 
     /**
@@ -665,8 +675,11 @@ class Query extends CustomException {
         /**
          * Handle where to select
          */
+        $index = 0;
         foreach ($where as $column => $value) {
-            $sql .= "$column = '$value' "; // TODO handle not equal to
+            $index !== 0 ? $sql .= 'AND ' : false;
+            $sql .= "$column = '$value' ";
+            $index++;
         }
 
         # Handle order
