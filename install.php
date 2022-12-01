@@ -1,4 +1,6 @@
 <?php
+echo "please wait installing...<br>";
+
 # Include database connection file
 require_once __DIR__ . '/inc/DB.php';
 
@@ -8,7 +10,7 @@ require_once __DIR__ . '/inc/DB.php';
  * writeDB for writing operation
  */
 try {
-    $writeDB = DB::connect_write_DB();
+    $writeDB = DB::connect_installing_DB();
 } catch (PDOException $e) {
     echo $e->getMessage();
     exit;
@@ -50,9 +52,7 @@ try {
     # Close connection
     $writeDB = null;
 
-    # Set app installed = true
-
 } catch (PDOException $e) {
     echo $e->getMessage();
+    exit;
 }
-// TODO remove error handler

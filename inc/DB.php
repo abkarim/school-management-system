@@ -1,5 +1,4 @@
 <?php
-
 # Import configuration file to get database configuration
 require_once __DIR__ . '/../config.php';
 
@@ -47,6 +46,21 @@ class DB {
             self::$_writeDBConnection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         }
         return self::$_writeDBConnection;
+    }
+
+    /**
+     * Handle write only action - while installing
+     * @return PDO connection
+     */
+    public static function connect_installing_DB(): PDO {
+        $DBConnection = new PDO(
+            "mysql:host=" . INSTALLING_DATA['DATABASE_HOSTNAME'] . ";dbname=" . INSTALLING_DATA['DATABASE_NAME'] . ";charset=" . self::$_DBcharset,
+            INSTALLING_DATA['DATABASE_USERNAME'],
+            INSTALLING_DATA['DATABASE_PASSWORD']
+        );
+        $DBConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $DBConnection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        return $DBConnection;
     }
 
 }

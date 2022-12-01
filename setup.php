@@ -1,11 +1,60 @@
 <?php
-# Include config file
-require_once __DIR__ . '/config.php';
+if (isset($_POST["submit"])) {
+    /**
+     * Update data
+     */
+    function update(string $constant, string $value, string $data): string {
+        $appendValue = "define('$constant', '$value')";
+        /**
+         * Regex to search for a constant name
+         * search for define('SOME_NAME', 'SOME VALUE');
+         */
+        return preg_replace("/define\((\s+)?\'$constant\'(\s+)?,(\s+)?\'(?'target'.+)?\'(\s+)?\)/", $appendValue, $data);
+    }
 
-# Load installation page if site is not installed
-if (APP_INSTALLED == true) {
-    header('Location: /index.php');
-    exit;
+    $data = [
+        'DATABASE_HOSTNAME' => isset($_POST['hostname']) ? $_POST['hostname'] : exit,
+        'DATABASE_NAME'     => isset($_POST['name']) ? $_POST['name'] : exit,
+        'DATABASE_USERNAME' => isset($_POST['username']) ? $_POST['username'] : exit,
+        'DATABASE_PASSWORD' => isset($_POST['password']) ? $_POST['password'] : exit,
+        'TABLE_PREFIX'      => isset($_POST['table_prefix']) ? $_POST['table_prefix'] : '',
+    ];
+
+    define('INSTALLING_DATA', $data);
+
+    /**
+     * Update data in config.php
+     */
+    $fileData = file_get_contents(__DIR__ . '/config.php');
+
+    foreach ($data as $key => $val) {
+        $fileData = update($key, $val, $fileData);
+    }
+
+    if (!file_put_contents(__DIR__ . '/config.php', $fileData)) {
+        echo "Something went wrong please try again later";
+    } else {
+        /**
+         * Don't stop script if user abort
+         */
+        ignore_user_abort(true);
+
+        /**
+         * Create database table
+         */
+        require_once __DIR__ . '/install.php';
+
+        /**
+         ** Table creation done
+         * Set installed = true in config.php
+         */
+        $fileData = update('APP_INSTALLED', 1, $fileData);
+        file_put_contents(__DIR__ . '/config.php', $fileData);
+
+        echo "installing done. Please reload page";
+        exit;
+    }
+
 }
 ?>
 
@@ -125,42 +174,3 @@ if (APP_INSTALLED == true) {
 </body>
 
 </html>
-
-<?php
-if (isset($_POST["submit"])) {
-
-    /**
-     * Update data
-     */
-    function update(string $constant, string $value, string $data): string {
-        $appendValue = "define('$constant', '$value')";
-        /**
-         * Regex to search for a constant name
-         * search for define('SOME_NAME', 'SOME VALUE');
-         */
-        return preg_replace("/define\((\s+)?\'$constant\'(\s+)?,(\s+)?\'(?'target'.+)?\'(\s+)?\)/", $appendValue, $data);
-    }
-
-    $data = [
-        'DATABASE_HOSTNAME' => isset($_POST['hostname']) ? $_POST['hostname'] : exit,
-        'DATABASE_NAME'     => isset($_POST['name']) ? $_POST['name'] : exit,
-        'DATABASE_USERNAME' => isset($_POST['username']) ? $_POST['username'] : exit,
-        'DATABASE_PASSWORD' => isset($_POST['password']) ? $_POST['password'] : exit,
-        'TABLE_PREFIX'      => isset($_POST['table_prefix']) ? $_POST['table_prefix'] : '',
-    ];
-
-    /**
-     * Update data in config.php
-     */
-    $fileData = file_get_contents(__DIR__ . '/config.php');
-
-    foreach ($data as $key => $val) {
-        $fileData = update($key, $val, $fileData);
-    }
-
-    if (!file_put_contents(__DIR__ . '/config.php', $fileData)) {
-        echo "Something went wrong please try again later";
-    }
-
-    echo 'done';
-}
