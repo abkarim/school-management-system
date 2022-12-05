@@ -1,0 +1,23 @@
+{
+  "name": "school-management-system",
+  "version": "0.1.0",
+  "description": "### Work in progress",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update:gui": "node ./update-gui.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abkarim/school-management-system.git"
+  },
+  "author": "karim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/abkarim/school-management-system/issues"
+  },
+  "homepage": "https://github.com/abkarim/school-management-system#readme",
+  "dependencies": {
+    "fs-extra": "^11.1.0"
+  }
+}

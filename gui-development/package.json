@@ -2,6 +2,7 @@
   "name": "admin",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/public",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -19,7 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "css:watch": "npx tailwindcss -i ./src/css/input.css -o ./src/css/App.css --watch",
-    "css:build": "npx tailwindcss -i ./src/css/input.css -o ./../public/css/App.css --minify"
+    "css:build": "npx tailwindcss -i ./src/css/input.css -o ./src/css/App.css --minify"
   },
   "eslintConfig": {
     "extends": [
