@@ -51,6 +51,11 @@ if (!fs.existsSync(CURRENT_DIRECTORY + '/gui-development/build')) {
  * Copy index.html file into index.php
  */
 let htmlData = fs.readFileSync(CURRENT_DIRECTORY + '/gui-development/build/index.html', 'utf-8');
+
+// Add public prefix to all url
+htmlData = htmlData.replaceAll('href="', 'href="/public');
+htmlData = htmlData.replaceAll('src="', 'src="/public');
+
 let indexFileData = fs.readFileSync(CURRENT_DIRECTORY + '/index.php', 'utf-8');
 indexFileData = indexFileData.replace(/<!doctype(.*\s*)+/, htmlData);
 fs.writeFileSync(CURRENT_DIRECTORY + '/index.php', indexFileData);

@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import "./css/App.css";
-import Center from "./components/util/Center";
+import Center from "./components/Center";
 import NotFound from "./pages/NotFound";
 import Default from "./pages/auth/Default";
 import ForgotPassword from "./pages/auth/ForgotPassword";
