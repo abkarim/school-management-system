@@ -5,8 +5,9 @@ import EmailInput from "../../components/input/EmailInput";
 import Label from "../../components/input/Label";
 import PasswordInput from "../../components/input/PasswordInput";
 import useUpdateTitle from "../../hooks/useUpdateTitle";
-import Link from "../../components/util/Link";
+import Link from "../../components/Link";
 import { useParams } from "react-router-dom";
+import http from "../../util/http";
 
 /**
  * Login page
@@ -27,11 +28,23 @@ function Login() {
   /**
    * Login request for user
    */
-  const login = () => {
+  const login = async () => {
     if (email.length < 1) return console.log("Please enter email");
     if (password.length < 1) return console.log("Please enter password");
 
-    
+    try {
+      http.post(
+        "login",
+        { email, password },
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
