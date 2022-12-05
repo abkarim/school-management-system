@@ -1,5 +1,7 @@
 # School management system
 
+## [DEMO](http://school.triksy.xyz/)
+
 ### Work in progress
 
 ## Backend Technology
