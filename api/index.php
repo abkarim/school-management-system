@@ -214,16 +214,6 @@ try {
         break;
 
     /**
-         * config
-         */
-    case 'config':
-        $request
-            ->post('Config', 'configure');
-
-        send_response(false, 405, ['method not allowed']);
-        break;
-
-    /**
          * School global
          */
     case 'school':

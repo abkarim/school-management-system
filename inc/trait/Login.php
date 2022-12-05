@@ -24,6 +24,8 @@ trait Login {
         !isset($data->email) ? $messages[]    = "email is required" : false;
         !isset($data->password) ? $messages[] = "password is required" : false;
 
+        // TODO onetime login
+
         if (count($messages) !== 0) {
             send_response(false, 400, $messages);
         }

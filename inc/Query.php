@@ -308,7 +308,8 @@ class Query extends CustomException {
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             class_id VARCHAR(500) NOT NULL,
             name VARCHAR(500) NOT NULL,
-            teacher_id VARCHAR(500) NULL,
+            teachers VARCHAR(500) NULL,
+            head VARCHAR(500) NULL,
             school_id VARCHAR(500) NOT NULL,
             created_by VARCHAR(200) NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP

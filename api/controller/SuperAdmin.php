@@ -17,13 +17,16 @@ class SuperAdmin {
 
         /**
          * Only one super user is allowed
-         * this method should only work when installing app
-         * after installation complete don't create a new user
+         * If already super user exists then don't allow to create another
          */
-        if (APP_INSTALLED === true) {
-            send_response(false, 400, ['any action in this route is not allowed']);
+        $prevUser = Query::get_specific(
+            self::$_table_name,
+            [],
+            ['1' => '1']
+        );
+        if (count($prevUser) !== 0) {
+            send_response(false, 400, ['this endpoint doesn\'t work anymore']);
         }
-        // TODO replace condition with user exists
 
         handle_content_type_json();
         $data = get_json_data();
@@ -38,6 +41,13 @@ class SuperAdmin {
         # Return error if error found
         if (count($errorMessages) > 0) {
             send_response(false, 400, $errorMessages);
+        }
+
+        /**
+         * Check installer IP with current IP
+         */
+        if (APP_INSTALLER_IP !== $_SERVER['REMOTE_ADDR']) {
+            send_response(false, 406, 'your IP doesn\'t matched with the installer IP address');
         }
 
         # Create user id
@@ -83,7 +93,7 @@ class SuperAdmin {
 
         # Check required field
         $errorMessages = [];
-        $allowedField = [];
+        $allowedField  = [];
 
         /**
          * Check only specific item that we allow to change

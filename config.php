@@ -72,6 +72,12 @@ define('MAX_IMAGE_UPLOAD_SIZE', 10);
 define('APP_INSTALLED', '1');
 
 /**
+ * Installer IP
+ * If same required to create super admin
+ */
+define('APP_INSTALLER_IP', '::1');
+
+/**
  * Show pdo error mode - bool
  * turn off in production
  */

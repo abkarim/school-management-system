@@ -7,5 +7,23 @@ if (APP_INSTALLED == false) {
     require __DIR__ . '/setup.php';
     exit;
 }
+?>
 
-echo "home page";
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/public/favicon.png" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="School management system" />
+    <script defer="defer" src="/public/js/main.0609e3de.js"></script>
+    <link href="/public/css/main.bd4c7f39.css" rel="stylesheet">
+</head>
+
+<body class="min-h-screen bg-gray-50"><noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root" class="min-h-screen"></div>
+</body>
+
+</html>

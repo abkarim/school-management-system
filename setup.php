@@ -49,6 +49,10 @@ if (isset($_POST["submit"])) {
          * Set installed = true in config.php
          */
         $fileData = update('APP_INSTALLED', 1, $fileData);
+        /**
+         * Add client ip
+         */
+        $fileData = update('APP_INSTALLER_IP', $_SERVER['REMOTE_ADDR'], $fileData);
         file_put_contents(__DIR__ . '/config.php', $fileData);
 
         echo "installing done. Please reload page";
