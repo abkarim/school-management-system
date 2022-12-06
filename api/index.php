@@ -156,6 +156,7 @@ try {
              */
         case 'super-admin':
             $request
+                ->get('SuperAdmin', 'isAvailable')
                 ->post('SuperAdmin', 'create')
                 ->auth('super_admin')
                 ->patch('SuperAdmin', 'update');

@@ -24,7 +24,8 @@ trait Login {
         !isset($data->email) ? $messages[]    = "email is required" : false;
         !isset($data->password) ? $messages[] = "password is required" : false;
 
-        // TODO onetime login
+        # onetime login
+        $onetime = isset($data->onetime) && $data->onetime == true ? true : false;
 
         if (count($messages) !== 0) {
             send_response(false, 400, $messages);
@@ -53,7 +54,7 @@ trait Login {
         }
 
         # Create session
-        $sessionData = Session::create_session();
+        $sessionData = Session::create_session($onetime);
 
         # Add role to user
         $user[0]['role'] = self::$_table_name;
