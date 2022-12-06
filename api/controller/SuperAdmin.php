@@ -11,6 +11,25 @@ class SuperAdmin {
     use ID, Password, Login;
 
     /**
+     * Is available super admin
+     */
+    public static function isAvailable() {
+        /**
+         * Only one super user is allowed
+         * If already super user exists then don't allow to create another
+         */
+        $user = Query::get_specific(
+            self::$_table_name,
+            [],
+            ['1' => '1']
+        );
+        if (count($user) === 0) {
+            send_response(true, 204, ['']);
+        }
+        send_response(false, 400, ['super user already exists']);
+    }
+
+    /**
      * Create super admin
      */
     public static function create(): void {
