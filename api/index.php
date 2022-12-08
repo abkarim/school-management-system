@@ -3,12 +3,18 @@
  * This file handle api endpoint
  */
 
+require_once __DIR__ . '/../config.php';
+
 /**
  * Response header
  */
-header("Access-Control-Allow-Origin: *"); // TODO remove this line
-header("Access-Control-Allow-Methods: 'GET, POST, PATCH, DELETE, OPTIONS'");
-header("Access-Control-Allow-Headers: 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'");
+if (APP_ENVIRONMENT === 'development') {
+    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+}
+
+header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: X-Requested-With");
+header("Access-Control-Allow-Credentials: true");
 
 # Get request url
 $url = $_SERVER['REQUEST_URI'];
