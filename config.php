@@ -82,3 +82,8 @@ define('APP_INSTALLER_IP', '');
  * turn off in production
  */
 define('SHOW_PDO_ERROR', true); // Todo set false
+
+/**
+ * Environment
+ */
+define('APP_ENVIRONMENT', 'development');
