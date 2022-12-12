@@ -9,7 +9,6 @@
 }
 
 body.loading {
-  position: relative;
   overflow: hidden;
 }
 
@@ -19,12 +18,13 @@ body.loading::before {
   position: absolute;
   inset: 0;
   z-index: 100;
+  @apply backdrop-blur-sm;
 }
 
 body.loading::after {
   content: "";
   position: absolute;
-  background-image: url("./../img//reload.png");
+  background-image: url("./../img//load.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: max(3vw, 50px);

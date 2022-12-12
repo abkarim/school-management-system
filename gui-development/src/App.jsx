@@ -1,73 +1,56 @@
-import { Routes, Route } from "react-router-dom";
-import Login from "./pages/auth/Login";
 import "./css/App.css";
-import Center from "./components/Center";
-import NotFound from "./pages/NotFound";
-import Default from "./pages/auth/Default";
-import ForgotPassword from "./pages/auth/ForgotPassword";
-import ResetPassword from "./pages/auth/ResetPassword";
-import CreateSuperUser from "./pages/user/CreateSuperUser";
+import { Routes, Route, Outlet } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import Loading from "./components/Loading";
+const NotFound = lazy(() => import("./pages/NotFound"))
+const Default = lazy(() => import("./pages/auth/Default"))
+const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"))
+const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"))
+const CreateSuperUser = lazy(() => import("./pages/user/CreateSuperUser"))
+const Login = lazy(() => import("./pages/auth/Login"));
+const Center = lazy(() => import("./components/Center"));
 
 function App() {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Center>
-            <CreateSuperUser />
-          </Center>
-        }
-      />
-      {/* Login Route */}
-      <Route path="/login">
+    <Suspense fallback={<Loading />}>
+      <Routes>
+
+        <Route path="/" element={<h1>Hi</h1>} />
+        {/* Create super user */}
         <Route
-          index
+          path="/create-super-admin"
           element={
             <Center>
-              <Default />
+              <CreateSuperUser />
             </Center>
           }
         />
-        <Route path=":role">
-          {/* Login page */}
-          <Route
-            index
-            element={
-              <Center>
-                <Login />
-              </Center>
-            }
-          />
-          {/* Forgot password */}
-          <Route
-            path="forgot-password"
-            element={
-              <Center>
-                <ForgotPassword />
-              </Center>
-            }
-          />
-          {/* Reset password */}
-          <Route
-            path="reset-password"
-            element={
-              <Center>
-                <ResetPassword />
-              </Center>
-            }
-          />
+        {/* Login */}
+        <Route
+          path="/login"
+          element={
+            <Center>
+              <Outlet />
+            </Center>
+          }
+        >
+          <Route index element={<Default />} />
+          <Route path=":role">
+            <Route index element={<Login />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
+          </Route>
         </Route>
-      </Route>
-      <Route
-        path="*"
-        element={
-          <Center>
-            <NotFound />
-          </Center>
-        }
-      />
-    </Routes>
+        <Route
+          path="*"
+          element={
+            <Center>
+              <NotFound />
+            </Center>
+          }
+        />
+      </Routes>
+    </Suspense>
   );
 }
 export default App;
