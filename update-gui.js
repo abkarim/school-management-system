@@ -59,6 +59,7 @@ htmlData = htmlData.replaceAll('src="/', 'src="/public/');
 
 let indexFileData = fs.readFileSync(CURRENT_DIRECTORY + '/index.php', 'utf-8');
 indexFileData = indexFileData.replace(/<!doctype(.*\s*)+/, htmlData);
+
 fs.writeFileSync(CURRENT_DIRECTORY + '/index.php', indexFileData);
 
 print('updating content in /index.php done');
@@ -74,6 +75,18 @@ print('deleting previous files in /public/static/ done');
  */
 fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/static', CURRENT_DIRECTORY + '/public/static/', { overwrite: true })
 print('copy new files in /public/static/ done');
+
+/**
+ * Replace static/js to public/static/js to main js
+ * to update js chunk file path
+ */
+const [MAIN_JS_FILE_NAME] = indexFileData.match(/\/public\/static\/js\/.+[.]js/);
+
+// main js
+let mainJSFileData = fs.readFileSync(CURRENT_DIRECTORY + MAIN_JS_FILE_NAME, 'utf-8');
+mainJSFileData.replaceAll("static/js", "public/static/js", mainJSFileData);
+fs.writeFileSync(CURRENT_DIRECTORY + MAIN_JS_FILE_NAME, mainJSFileData);
+print('replacing file path in ' + MAIN_JS_FILE_NAME + ' from static/js to public/static/js done');
 
 /**
  * Copy manifest.json
