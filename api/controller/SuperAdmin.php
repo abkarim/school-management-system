@@ -66,7 +66,7 @@ class SuperAdmin {
          * Check installer IP with current IP
          */
         if (APP_INSTALLER_IP !== $_SERVER['REMOTE_ADDR']) {
-            send_response(false, 406, 'your IP doesn\'t matched with the installer IP address');
+            send_response(false, 406, ['your IP doesn\'t matched with the installer IP address']);
         }
 
         # Create user id
