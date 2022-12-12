@@ -35,6 +35,7 @@ function print(text, type = 'success') {
     if (type === 'error') bg = colors.bg.red;
 
     console.log(bg, fg, text, colors.reset);
+    console.log('')
 }
 
 print("updating files, please wait ...", 'info')
@@ -53,28 +54,38 @@ if (!fs.existsSync(CURRENT_DIRECTORY + '/gui-development/build')) {
 let htmlData = fs.readFileSync(CURRENT_DIRECTORY + '/gui-development/build/index.html', 'utf-8');
 
 // Add public prefix to all url
-htmlData = htmlData.replaceAll('href="', 'href="/public');
-htmlData = htmlData.replaceAll('src="', 'src="/public');
+htmlData = htmlData.replaceAll('href="/', 'href="/public/');
+htmlData = htmlData.replaceAll('src="/', 'src="/public/');
 
 let indexFileData = fs.readFileSync(CURRENT_DIRECTORY + '/index.php', 'utf-8');
 indexFileData = indexFileData.replace(/<!doctype(.*\s*)+/, htmlData);
 fs.writeFileSync(CURRENT_DIRECTORY + '/index.php', indexFileData);
 
+print('updating content in /index.php done');
+
+/**
+ * Delete previous file
+ */
+fs.rmSync(CURRENT_DIRECTORY + '/public/static/', { recursive: true, force: true });
+print('deleting previous files in /public/static/ done');
+
 /**
  * Copy static folder
  */
 fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/static', CURRENT_DIRECTORY + '/public/static/', { overwrite: true })
+print('copy new files in /public/static/ done');
 
 /**
  * Copy manifest.json
  */
-fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/manifest.json', CURRENT_DIRECTORY + '/public/manifest.json', {overwrite: true});
-fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/asset-manifest.json', CURRENT_DIRECTORY + '/public/asset-manifest.json', {overwrite: true});
+fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/manifest.json', CURRENT_DIRECTORY + '/public/manifest.json', { overwrite: true });
+fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/asset-manifest.json', CURRENT_DIRECTORY + '/public/asset-manifest.json', { overwrite: true });
+print('copying manifest.json done');
 
 /**
  * Copy robots.txt file
  */
-fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/robots.txt', CURRENT_DIRECTORY + '/public/robots.txt', {overwrite: true});
-
+fse.copySync(CURRENT_DIRECTORY + '/gui-development/build/robots.txt', CURRENT_DIRECTORY + '/public/robots.txt', { overwrite: true });
+print('copying robots.txt done');
 
 print('done');

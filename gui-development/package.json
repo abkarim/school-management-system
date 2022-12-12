@@ -18,8 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "css:watch": "npx tailwindcss -i ./src/css/input.css -o ./src/css/App.css --watch",
-    "css:build": "npx tailwindcss -i ./src/css/input.css -o ./src/css/App.css --minify"
+    "tailwindcss:watch": "npx tailwindcss -i ./src/css/input.css -o ./src/css/App.css --watch",
+    "tailwindcss:build": "npx tailwindcss -i ./src/css/input.css -o ./src/css/App.css --minify"
   },
   "eslintConfig": {
     "extends": [

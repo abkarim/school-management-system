@@ -69,7 +69,7 @@ define('STUDENT_ID_START_FROM', '000000000000001');
 define('MAX_IMAGE_UPLOAD_SIZE', 10);
 
 # Handle installation
-define('APP_INSTALLED', '1');
+define('APP_INSTALLED', '');
 
 /**
  * Installer IP
@@ -78,7 +78,16 @@ define('APP_INSTALLED', '1');
 define('APP_INSTALLER_IP', '');
 
 /**
+ * Environment
+ */
+define('APP_ENVIRONMENT', 'development');
+
+/**
  * Show pdo error mode - bool
  * turn off in production
  */
-define('SHOW_PDO_ERROR', true); // Todo set false
+if (APP_ENVIRONMENT === 'development') {
+    define('SHOW_PDO_ERROR', true);
+} else {
+    define('SHOW_PDO_ERROR', false);
+}

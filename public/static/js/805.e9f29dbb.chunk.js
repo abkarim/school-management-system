@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkadmin=self.webpackChunkadmin||[]).push([[805],{805:function(n,e,t){t.r(e),t.d(e,{default:function(){return c}});var r=t(459),u=t(184);function c(n){Object.assign({},((0,r.Z)(n),n));return(0,u.jsxs)("div",{children:[(0,u.jsx)("h1",{className:"text-6xl",children:"404"}),(0,u.jsx)("p",{className:"text-lg",children:"The page not found"})]})}},459:function(n,e,t){function r(n){if(null==n)throw new TypeError("Cannot destructure "+n)}t.d(e,{Z:function(){return r}})}}]);
+//# sourceMappingURL=805.e9f29dbb.chunk.js.map

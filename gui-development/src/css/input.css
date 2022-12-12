@@ -7,3 +7,28 @@
     font-family: "font-sans", sans-serif;
   }
 }
+
+body.loading {
+  overflow: hidden;
+}
+
+body.loading::before {
+  content: "";
+  background-color: rgba(0, 0, 0, 0.85);
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  @apply backdrop-blur-sm;
+}
+
+body.loading::after {
+  content: "";
+  position: absolute;
+  background-image: url("./../img//load.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: max(3vw, 50px);
+  z-index: 101;
+  inset: 0;
+  @apply animate-spin;
+}

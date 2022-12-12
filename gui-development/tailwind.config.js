@@ -7,7 +7,15 @@ module.exports = {
     "./src/pages/**/*.jsx"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'lato': ['Lato', 'sans-serif']
+      },
+      backgroundImage: {
+        'img-close-white': "url('" + __dirname + "/src/img/close/white.png')",
+        'img-close-red': "url('" + __dirname + "/src/img/close/red.png')",
+      },
+    },
   },
   plugins: [],
 }
