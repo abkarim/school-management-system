@@ -17,28 +17,28 @@
  * Database host
  * require to connect with database
  */
-define('DATABASE_HOSTNAME', 'localhost');
+define('DATABASE_HOSTNAME', '');
 
 /**
  * Database name
  * require to connect with database
  ** Which database to connect
  */
-define('DATABASE_NAME', 'sc_management');
+define('DATABASE_NAME', '');
 
 /**
  * Database user username
  * require to connect with database
  ** Username to use in connection
  */
-define('DATABASE_USERNAME', 'root');
+define('DATABASE_USERNAME', '');
 
 /**
  * Database user password
  * require to connect with database
  ** Password for the use to use in connection
  */
-define('DATABASE_PASSWORD', 'root');
+define('DATABASE_PASSWORD', '');
 
 /**
  * Database charset
