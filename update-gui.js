@@ -84,7 +84,7 @@ const [MAIN_JS_FILE_NAME] = indexFileData.match(/\/public\/static\/js\/.+[.]js/)
 
 // main js
 let mainJSFileData = fs.readFileSync(CURRENT_DIRECTORY + MAIN_JS_FILE_NAME, 'utf-8');
-mainJSFileData.replaceAll("static/js", "public/static/js", mainJSFileData);
+mainJSFileData = mainJSFileData.replaceAll("static/js", "public/static/js", mainJSFileData);
 fs.writeFileSync(CURRENT_DIRECTORY + MAIN_JS_FILE_NAME, mainJSFileData);
 print('replacing file path in ' + MAIN_JS_FILE_NAME + ' from static/js to public/static/js done');
 
