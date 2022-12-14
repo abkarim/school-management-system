@@ -9,6 +9,7 @@ import useLoading from "../../hooks/useLoading";
 import { useEffect, useState } from "react";
 import Notification from "../../components/Notification";
 import isEmpty from "../../util/isEmpty";
+import isEmail from "../../util/isEmail";
 /**
  * ! Error in this file
  */
@@ -48,13 +49,10 @@ export default function CreateSuperUser() {
     })
 
 
-    /**
-     * ! Error
-     */
-    // if (!isEmail(formData.email)) return setNotification({
-    //   text: "please enter a valid email",
-    //   type: 'error'
-    // })
+    if (!isEmail(formData.email)) return setNotification({
+      text: "please enter a valid email",
+      type: 'error'
+    })
 
     if (formData.password !== formData.cPassword) return setNotification({
       text: "passwords not matched",
