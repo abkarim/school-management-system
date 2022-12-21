@@ -1,8 +1,11 @@
 import Link from "../../components/Link";
+import useUpdateTitle from "../../hooks/useUpdateTitle";
 
 export default function Default() {
+  useUpdateTitle('Login');
+  
   return (
-    <div className="bg-white p-2 max-w-lg flex-grow rounded-sm shadow-2xl">
+    <div className="bg-white p-4 max-w-lg flex-grow rounded-sm shadow-2xl">
       <h1 className="text-3xl text-gray-900 font-semibold tracking-normal font-lato">
         Select a user role to login
       </h1>

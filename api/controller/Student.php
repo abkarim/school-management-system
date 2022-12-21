@@ -1,12 +1,13 @@
 <?php
-
-require_once __DIR__ . '/../trait/ID.php';
+require_once __DIR__ . '/../../inc/trait/ID.php';
+require_once __DIR__ . '/../../inc/trait/Login.php';
+require_once __DIR__ . '/../../inc/trait/Password.php';
 
 class Student {
     private static $_table_name      = 'student';
     private static $_initial_user_id = STUDENT_ID_START_FROM + 1;
 
-    use ID; # TO generate user id
+    use ID, Password, Login; # TO generate user id
 
     /**
      * Create student
@@ -17,7 +18,6 @@ class Student {
 
         # Check required field
         $errorMessages = [];
-
 
         # Return error if error found
         if (count($errorMessages) !== 0) {

@@ -4,7 +4,7 @@ class Session {
     private static $_table_name                 = 'session';
     private static $_cookie_name                = "token";
     private static $_expire_access_token_after  = 3; // days
-    private static $_expire_refresh_token_after = 20; // days
+    private static $_expire_refresh_token_after = 15; // days
 
     /**
      * Checks is a parameter valid base64 encoded or not
@@ -17,24 +17,27 @@ class Session {
 
     /**
      * Create user session
+     * @param bool one time login
+     * @return array session
      */
-    public static function create_session(): array{
+    public static function create_session(bool $one_time): array{
         # Handle time
         $currentTime = time();
 
         # Create access token
         $accessToken       = base64_encode(bin2hex(openssl_random_pseudo_bytes(32)));
-        $accessTokenExpiry = date('Y-m-d h:i:s', $currentTime + (self::$_expire_access_token_after * 24 * 60 * 60));
+        $accessTokenExpiry = $one_time === true ? date('Y-m-d h:i:s', $currentTime + (24 * 60 * 60)) : date('Y-m-d h:i:s', $currentTime + (self::$_expire_access_token_after * 24 * 60 * 60));
 
         # Create refresh token
         $refreshToken       = base64_encode(bin2hex(openssl_random_pseudo_bytes(32)));
-        $refreshTokenExpiry = date('Y-m-d h:i:s', $currentTime + (self::$_expire_refresh_token_after * 24 * 60 * 60));
+        $refreshTokenExpiry = $one_time === true ? date('Y-m-d h:i:s', $currentTime + (24 * 60 * 60)) : date('Y-m-d h:i:s', $currentTime + (self::$_expire_refresh_token_after * 24 * 60 * 60));
 
         return [
             'access_token'         => $accessToken,
             'access_token_expiry'  => $accessTokenExpiry,
             'refresh_token'        => $refreshToken,
             'refresh_token_expiry' => $refreshTokenExpiry,
+            'one_time'             => $one_time,
         ];
     }
 
@@ -59,11 +62,11 @@ class Session {
         if (!isset($cookieData->access_token) || !isset($cookieData->refresh_token)) {
             send_response(false, 401, ['you must be a logged in user to continue']);
         }
-        
+
         /**
          * Validate access token and refresh token
          */
-        if( !self::is_valid_base64($cookieData->access_token) || !self::is_valid_base64($cookieData->refresh_token) ) {
+        if (!self::is_valid_base64($cookieData->access_token) || !self::is_valid_base64($cookieData->refresh_token)) {
             send_response(false, 401, ['you must be a logged in user to continue']);
         }
 
@@ -115,7 +118,7 @@ class Session {
                 'user_id'              => $user['user_id'],
                 'role'                 => $user['role'],
                 'school_id'            => $user['role'] === 'super_admin' ? '' : $user['school_id'],
-                'ip_address'           => filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ? $_SERVER['REMOTE_ADDR'] : 'invalid ip',
+                'ip_address'           => $_SERVER['REMOTE_ADDR'],
                 'access_token'         => $sessionData['access_token'],
                 'access_token_expiry'  => $sessionData['access_token_expiry'],
                 'refresh_token'        => $sessionData['refresh_token'],
@@ -149,14 +152,16 @@ class Session {
      * Set cookie
      */
     private static function set_cookie(array $sessionData): void {
-        # Set cookie
+        $expireTime = isset($sessionData['one_time']) && $sessionData['one_time'] === true ? 0 : time() + (86400 * self::$_expire_refresh_token_after); # 86400 = 1 day
+
         setcookie(
-            self::$_cookie_name,
-            json_encode($sessionData),
-            time() + (86400 * self::$_expire_refresh_token_after), # 86400 = 1 day
-            "/",
-            $_SERVER['SERVER_NAME'],
-            // true // TODO turn on
+            self::$_cookie_name, // name
+            json_encode($sessionData), // value
+            $expireTime, // expire time
+            "/", // path
+            $_SERVER['SERVER_NAME'], // domain
+            isset($_SERVER['HTTPS']) ? true : false, // Secure
+            true // http only
         );
     }
 

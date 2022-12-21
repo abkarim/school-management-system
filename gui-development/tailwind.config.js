@@ -2,8 +2,8 @@
 module.exports = {
   content: [
     "./public/index.html",
-    "./src/hooks/**/.js",
     "./src/components/**/*.jsx",
+    "./src/hooks/**/.js",
     "./src/pages/**/*.jsx"
   ],
   theme: {

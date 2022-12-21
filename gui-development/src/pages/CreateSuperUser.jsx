@@ -1,15 +1,15 @@
-import EmailInput from "../../components/input/EmailInput";
-import Label from "../../components/input/Label";
-import TextInput from "../../components/input/TextInput";
-import PasswordInput from "../../components/input/PasswordInput";
-import Button from "../../components/button/Button";
-import http from "../../util/http";
+import EmailInput from "../components/input/EmailInput";
+import Label from "../components/input/Label";
+import TextInput from "../components/input/TextInput";
+import PasswordInput from "../components/input/PasswordInput";
+import Button from "../components/button/Button";
+import http from "../util/http";
 import { Navigate, useNavigate } from "react-router-dom";
-import useLoading from "../../hooks/useLoading";
+import useLoading from "../hooks/useLoading";
 import { useEffect, useState } from "react";
-import Notification from "../../components/Notification";
-import isEmpty from "../../util/isEmpty";
-import isEmail from "../../util/isEmail";
+import Notification from "../components/Notification";
+import isEmpty from "../util/isEmpty";
+import isEmail from "../util/isEmail";
 /**
  * ! Error in this file
  */
