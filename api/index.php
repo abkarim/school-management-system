@@ -9,7 +9,8 @@ require_once __DIR__ . '/../config.php';
  * Response header
  */
 if (APP_ENVIRONMENT === 'development') {
-    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+    # Silent warning in api dev via postman, etc
+    @header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
 }
 
 header("Access-Control-Allow-Methods: 'GET, POST, PATCH, DELETE, OPTIONS'");
@@ -132,21 +133,22 @@ try {
 
         # Remove /api/login/ from current path
         switch (substr($url, 11)) {
-        /**
-             * Super admin
-             */
+
         case 'super-admin':
             $request->post('SuperAdmin', 'login');
             send_response(false, 405, ['method not allowed']);
             break;
 
-        /**
-             * admin
-             */
         case 'admin':
             $request->post('Admin', 'login');
             send_response(false, 405, ['method not allowed']);
             break;
+
+        case 'student':
+            $request->post('Student', 'login');
+            send_response(false, 405, ['method not allowed']);
+            break;
+
         }
         break;
 
@@ -200,22 +202,28 @@ try {
              * Librarian
              */
         case 'librarian':
+            send_response(false, 405, ['method not allowed']);
             break;
 
         /**
              * Accountant
              */
         case 'accountant':
+            send_response(false, 405, ['method not allowed']);
             break;
 
         /**
              * Student
              */
         case 'student':
+            send_response(false, 405, ['method not allowed']);
             break;
 
-        default:
-            send_response(false, 404, ['endpoint not found']);
+        case 'me':
+            $request
+                ->get('User', 'me');
+            send_response(false, 405, ['method not allowed']);
+
         }
 
         break;
@@ -266,11 +274,6 @@ try {
         send_response(false, 405, ['method not allowed']);
         break;
 
-    /**
-         * Handle unmatched endpoint
-         */
-    default:
-        send_response(false, 404, ['endpoint not found']);
     }
 
 } catch (CustomException $e) {
@@ -283,3 +286,8 @@ try {
         send_response(false, 500, ['something went wrong, please try again later!']);
     }
 }
+
+/**
+ * Handle unmatched endpoint
+ */
+send_response(false, 404, ['endpoint not found']);

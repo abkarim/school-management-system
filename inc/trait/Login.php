@@ -20,7 +20,6 @@ trait Login {
         # Check required filed
 
         $messages = [];
-        # Add messages
         !isset($data->email) ? $messages[]    = "email is required" : false;
         !isset($data->password) ? $messages[] = "password is required" : false;
 
@@ -40,7 +39,6 @@ trait Login {
             ]
         );
 
-        # Sleep for 1 second
         sleep(1);
 
         # Is user exists

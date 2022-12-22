@@ -23,9 +23,8 @@ export default function Notification({ type = "", onClose, closeOnBGClick = fals
 
   return (
     <>
-      <div className={`fixed inset-0 backdrop-blur-sm z-40 ${closeOnBGClick ? 'cursor-pointer' : ''}`} onClick={closeOnBGClick ? onClose : () => { }}></div>
       <div
-        className={`absolute bottom-5 right-5 rounded-md p-2 px-4 shadow-xl max-w-xs flex items-center z-50 transition ${bgClass}`}
+        className={`absolute bottom-5 right-5 rounded-md p-2 px-4 shadow-xl max-w-xs lg:max-w-md flex items-center z-50 transition ${bgClass}`}
         {...props}
       >
         <span
