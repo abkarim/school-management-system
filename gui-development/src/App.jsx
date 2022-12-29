@@ -11,6 +11,7 @@ const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"))
 const CreateSuperUser = lazy(() => import("./pages/CreateSuperUser"))
 const Login = lazy(() => import("./pages/auth/Login"));
 const Center = lazy(() => import("./components/Center"));
+const Logout = lazy(() => import("./pages/auth/Logout"));
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
         {/* Dashboard */}
         <Route path="/" element={<Dashboard><Outlet /></Dashboard>}>
           <Route index />
+
+          <Route path="logout" element={<Logout />} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<Center> <NotFound /></Center>} />
