@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/505.960f1095.chunk.js","mappings":"mGAAe,SAASA,IAAU,C","sources":["pages/auth/Logout.jsx"],"sourcesContent":["export default function Logout() {}\r\n"],"names":["Logout"],"sourceRoot":""}
